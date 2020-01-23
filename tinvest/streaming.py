@@ -267,7 +267,7 @@ class StreamingApi:
     def __getitem__(self, key: str) -> Any:
         if self._state and key in self._state:
             return self._state[key]
-        raise IndexError
+        raise KeyError
 
 
 __all__ = (

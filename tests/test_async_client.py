@@ -5,8 +5,8 @@ from tinvest.async_client import AsyncClient, ClientSession
 from tinvest.constants import PRODUCTION
 
 
-@pytest.fixture()
-def session(mocker):
+@pytest.yield_fixture()
+async def session(mocker):
     _session = ClientSession()
     mocker.patch.object(
         _session,
@@ -14,7 +14,8 @@ def session(mocker):
         return_value=asynctest.MagicMock(autospec=True),
         autospec=True,
     )
-    return _session
+    yield _session
+    await _session.close()
 
 
 @pytest.fixture()
