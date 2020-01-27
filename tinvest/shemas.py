@@ -4,6 +4,11 @@ from typing import Any, Dict, List, Optional, Tuple
 from pydantic import BaseModel  # pylint: disable=E0611
 
 
+class BrokerAccountType(str, Enum):
+    tinkoff = 'Tinkoff'
+    tinkoff_iis = 'TinkoffIis'
+
+
 class CandleResolution(str, Enum):
     min1 = '1min'
     min2 = '2min'
@@ -96,6 +101,29 @@ class TradeStatus(str, Enum):
 class MoneyAmount(BaseModel):
     currency: Currency
     value: float
+
+
+class SearchMarketInstrument(BaseModel):
+    currency: Optional[Currency]
+    figi: str
+    isin: Optional[str]
+    lot: int
+    min_price_increment: Optional[float]
+    name: str
+    ticker: str
+    type: InstrumentType
+
+    class Config:
+        fields = {'min_price_increment': {'alias': 'minPriceIncrement'}}
+
+
+class SearchMarketInstrumentResponse(BaseModel):
+    payload: SearchMarketInstrument
+    status: str = 'Ok'
+    tracking_id: str
+
+    class Config:
+        fields = {'tracking_id': {'alias': 'trackingId'}}
 
 
 class MarketInstrument(BaseModel):
@@ -214,6 +242,7 @@ class Orderbook(BaseModel):
     limit_down: Optional[float]
     limit_up: Optional[float]
     min_price_increment: float
+    face_value: Optional[float]
     trade_status: TradeStatus
 
     class Config:
@@ -223,6 +252,7 @@ class Orderbook(BaseModel):
             'limit_down': {'alias': 'limitDown'},
             'limit_up': {'alias': 'limitUp'},
             'min_price_increment': {'alias': 'minPriceIncrement'},
+            'face_value': {'alias': 'faceValue'},
             'trade_status': {'alias': 'tradeStatus'},
         }
 
@@ -233,6 +263,7 @@ class PlacedLimitOrder(BaseModel):
     operation: OperationType
     order_id: str
     reject_reason: Optional[str]
+    message: Optional[str]
     requested_lots: int
     status: OrderStatus
 
@@ -246,6 +277,7 @@ class PlacedLimitOrder(BaseModel):
 
 
 class PortfolioPosition(BaseModel):
+    name: str
     average_position_price: Optional[MoneyAmount]
     average_position_price_no_nkd: Optional[MoneyAmount]
     balance: float
@@ -385,6 +417,60 @@ class SandboxSetPositionBalanceRequest(BaseModel):
     figi: Optional[str]
 
 
+class SandboxAccount(BaseModel):
+    broker_account_type: BrokerAccountType
+    broker_account_id: str
+
+    class Config:
+        fields = {
+            'broker_account_type': {'alias': 'brokerAccountType'},
+            'broker_account_id': {'alias': 'brokerAccountId'},
+        }
+
+
+class SandboxRegisterResponse(BaseModel):
+    tracking_id: str
+    status: str
+    payload: SandboxAccount
+
+    class Config:
+        fields = {'tracking_id': {'alias': 'trackingId'}}
+
+
+class SandboxRegisterRequest(BaseModel):
+    broker_account_type: BrokerAccountType
+
+    class Config:
+        allow_population_by_field_name = True
+        fields = {
+            'broker_account_type': {'alias': 'brokerAccountType'},
+        }
+
+
+class UserAccount(BaseModel):
+    broker_account_type: BrokerAccountType
+    broker_account_id: str
+
+    class Config:
+        fields = {
+            'broker_account_type': {'alias': 'brokerAccountType'},
+            'broker_account_id': {'alias': 'brokerAccountId'},
+        }
+
+
+class UserAccounts(BaseModel):
+    accounts: List[UserAccount]
+
+
+class UserAccountsResponse(BaseModel):
+    tracking_id: str
+    status: str
+    payload: UserAccounts
+
+    class Config:
+        fields = {'tracking_id': {'alias': 'trackingId'}}
+
+
 class InstrumentInfoStreamingSchema(BaseModel):
     figi: str
     trade_status: str
@@ -411,6 +497,7 @@ CandleStreamingSchema = Candle
 
 
 __all__ = (
+    'BrokerAccountType',
     'Candle',
     'CandleResolution',
     'Candles',
@@ -447,8 +534,16 @@ __all__ = (
     'PortfolioCurrenciesResponse',
     'PortfolioPosition',
     'PortfolioResponse',
+    'SandboxAccount',
     'SandboxCurrency',
     'SandboxSetCurrencyBalanceRequest',
     'SandboxSetPositionBalanceRequest',
+    'SandboxRegisterRequest',
+    'SandboxRegisterResponse',
+    'SearchMarketInstrument',
+    'SearchMarketInstrumentResponse',
     'TradeStatus',
+    'UserAccount',
+    'UserAccounts',
+    'UserAccountsResponse',
 )

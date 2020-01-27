@@ -9,6 +9,7 @@ from tinvest import (
     MarketInstrumentListResponse,
     MarketInstrumentResponse,
     OrderbookResponse,
+    SearchMarketInstrumentResponse,
 )
 
 
@@ -79,7 +80,7 @@ def test_market_search_by_figi_get(api_client, http_client, figi):
     http_client.request.assert_called_once_with(
         'GET',
         '/market/search/by-figi',
-        response_model=MarketInstrumentResponse,
+        response_model=SearchMarketInstrumentResponse,
         params={'figi': figi},
     )
 
@@ -90,6 +91,6 @@ def test_market_search_by_ticker_get(api_client, http_client):
     http_client.request.assert_called_once_with(
         'GET',
         '/market/search/by-ticker',
-        response_model=MarketInstrumentListResponse,
+        response_model=SearchMarketInstrumentResponse,
         params={'ticker': ticker},
     )

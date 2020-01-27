@@ -8,15 +8,21 @@ def api_client(http_client):
     return PortfolioApi(http_client)
 
 
-def test_portfolio_get(api_client, http_client):
-    api_client.portfolio_get()
+def test_portfolio_get(api_client, http_client, broker_account_id):
+    api_client.portfolio_get(broker_account_id)
     http_client.request.assert_called_once_with(
-        'GET', '/portfolio', response_model=PortfolioResponse
+        'GET',
+        '/portfolio',
+        response_model=PortfolioResponse,
+        params={'brokerAccountId': broker_account_id},
     )
 
 
-def test_portfolio_currencies_get(api_client, http_client):
-    api_client.portfolio_currencies_get()
+def test_portfolio_currencies_get(api_client, http_client, broker_account_id):
+    api_client.portfolio_currencies_get(broker_account_id)
     http_client.request.assert_called_once_with(
-        'GET', '/portfolio/currencies', response_model=PortfolioCurrenciesResponse,
+        'GET',
+        '/portfolio/currencies',
+        response_model=PortfolioCurrenciesResponse,
+        params={'brokerAccountId': broker_account_id},
     )
