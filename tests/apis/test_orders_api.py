@@ -15,28 +15,34 @@ def api_client(http_client):
     return OrdersApi(http_client)
 
 
-def test_orders_get(api_client, http_client):
-    api_client.orders_get()
+def test_orders_get(api_client, http_client, broker_account_id):
+    api_client.orders_get(broker_account_id)
     http_client.request.assert_called_once_with(
-        'GET', '/orders', response_model=OrdersResponse
+        'GET',
+        '/orders',
+        response_model=OrdersResponse,
+        params={'brokerAccountId': broker_account_id},
     )
 
 
-def test_orders_limit_order_post(api_client, http_client, figi):
+def test_orders_limit_order_post(api_client, http_client, figi, broker_account_id):
     body = LimitOrderRequest(lots=3, operation=OperationType.buy, price=13.5)
-    api_client.orders_limit_order_post(figi, body)
+    api_client.orders_limit_order_post(figi, body, broker_account_id)
     http_client.request.assert_called_once_with(
         'POST',
         '/orders/limit-order',
         response_model=LimitOrderResponse,
-        params={'figi': figi},
+        params={'figi': figi, 'brokerAccountId': broker_account_id},
         data=body.json(by_alias=True),
     )
 
 
-def test_orders_cancel_post(api_client, http_client):
+def test_orders_cancel_post(api_client, http_client, broker_account_id):
     order_id = 'some_order_id'
-    api_client.orders_cancel_post(order_id)
+    api_client.orders_cancel_post(order_id, broker_account_id)
     http_client.request.assert_called_once_with(
-        'POST', '/orders/cancel', response_model=Empty, params={'orderId': order_id}
+        'POST',
+        '/orders/cancel',
+        response_model=Empty,
+        params={'orderId': order_id, 'brokerAccountId': broker_account_id},
     )
