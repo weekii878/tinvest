@@ -1,4 +1,4 @@
-from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi
+from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi, UserApi
 from .async_client import AsyncClient
 from .shemas import (
     BrokerAccountType,
@@ -6,11 +6,14 @@ from .shemas import (
     CandleResolution,
     Candles,
     CandlesResponse,
+    CandleStreamingSchema,
     Currencies,
     Currency,
     CurrencyPosition,
     Empty,
     Error,
+    ErrorStreamingSchema,
+    InstrumentInfoStreamingSchema,
     InstrumentType,
     LimitOrderRequest,
     LimitOrderResponse,
@@ -29,6 +32,7 @@ from .shemas import (
     Order,
     Orderbook,
     OrderbookResponse,
+    OrderbookStreamingSchema,
     OrderResponse,
     OrdersResponse,
     OrderStatus,
@@ -73,6 +77,7 @@ __all__ = (
     'OrdersApi',
     'PortfolioApi',
     'SandboxApi',
+    'UserApi',
     # Schemas
     'BrokerAccountType',
     'Candle',

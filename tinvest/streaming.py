@@ -90,9 +90,12 @@ class Streaming:
                 receive_timeout=self._receive_timeout,
             ) as ws:
                 await self._run(ws)
-        except asyncio.CancelledError:
+        except asyncio.CancelledError:  # pylint: disable=try-except-raise
             raise
-        except Exception as e:  # pylint: disable=W0703
+        except asyncio.TimeoutError:
+            logger.error('Timeout error. Try to reconnect')
+            await asyncio.sleep(self._reconnect_timeout)
+        except aiohttp.ClientConnectorError as e:
             logger.error('Connection error: %s. Try to reconnect', e)
             await asyncio.sleep(self._reconnect_timeout)
 

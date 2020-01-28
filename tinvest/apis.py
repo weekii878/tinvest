@@ -7,7 +7,6 @@ from .shemas import (
     LimitOrderRequest,
     LimitOrderResponse,
     MarketInstrumentListResponse,
-    MarketInstrumentResponse,
     OperationsResponse,
     OrderbookResponse,
     OrdersResponse,
@@ -277,7 +276,7 @@ class OperationsApi(BaseApi):
 class UserApi(BaseApi):
     """Получении информации по брокерским счетам"""
 
-    def accounts_get(self):
+    def accounts_get(self, **kwargs):
         """GET /user/accounts Получение брокерских счетов клиента"""
         return self.client.request(
             'GET', '/user/accounts', response_model=UserAccountsResponse, **kwargs

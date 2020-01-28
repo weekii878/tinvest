@@ -7,7 +7,6 @@ from tinvest import (
     CandlesResponse,
     MarketApi,
     MarketInstrumentListResponse,
-    MarketInstrumentResponse,
     OrderbookResponse,
     SearchMarketInstrumentResponse,
 )
