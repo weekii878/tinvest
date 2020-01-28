@@ -46,14 +46,15 @@ class SandboxApi(BaseApi):
     def sandbox_currencies_balance_post(
         self,
         body: SandboxSetCurrencyBalanceRequest,
-        broker_account_id: Optional[str],
+        broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
         """POST /sandbox/currencies/balance
         Выставление баланса по валютным позициям"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         kwargs.setdefault('data', body.json(by_alias=True))
         return self.client.request(
             'POST', '/sandbox/currencies/balance', response_model=Empty, **kwargs,
@@ -62,37 +63,40 @@ class SandboxApi(BaseApi):
     def sandbox_positions_balance_post(
         self,
         body: SandboxSetPositionBalanceRequest,
-        broker_account_id: Optional[str],
+        broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
         """POST /sandbox/positions/balance
         Выставление баланса по инструментным позициям"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         kwargs.setdefault('data', body.json(by_alias=True))
         return self.client.request(
             'POST', '/sandbox/positions/balance', response_model=Empty, **kwargs
         )
 
     def sandbox_remove_post(
-        self, broker_account_id: Optional[str], **kwargs: Any
+        self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
         """POST /sandbox/remove Удаление счета клиента"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'POST', '/sandbox/remove', response_model=Empty, **kwargs
         )
 
     def sandbox_clear_post(
-        self, broker_account_id: Optional[str], **kwargs: Any
+        self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
         """POST /sandbox/clear Удаление всех позиций"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'POST', '/sandbox/clear', response_model=Empty, **kwargs
         )
@@ -101,11 +105,12 @@ class SandboxApi(BaseApi):
 class OrdersApi(BaseApi):
     """Операции заявок"""
 
-    def orders_get(self, broker_account_id: Optional[str], **kwargs: Any) -> Any:
+    def orders_get(self, broker_account_id: Optional[str] = None, **kwargs: Any) -> Any:
         """GET /orders Получение списка активных заявок"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'GET', '/orders', response_model=OrdersResponse, **kwargs
         )
@@ -114,27 +119,29 @@ class OrdersApi(BaseApi):
         self,
         figi: str,
         body: LimitOrderRequest,
-        broker_account_id: Optional[str],
+        broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
         """POST /orders/limit-order Создание лимитной заявки"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         kwargs.setdefault('data', body.json(by_alias=True))
         return self.client.request(
             'POST', '/orders/limit-order', response_model=LimitOrderResponse, **kwargs,
         )
 
     def orders_cancel_post(
-        self, order_id: str, broker_account_id: Optional[str], **kwargs: Any
+        self, order_id: str, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
         """POST /orders/cancel Отмена заявки"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('orderId', order_id)
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'POST', '/orders/cancel', response_model=Empty, **kwargs
         )
@@ -143,22 +150,26 @@ class OrdersApi(BaseApi):
 class PortfolioApi(BaseApi):
     """Операции с портфелем пользователя"""
 
-    def portfolio_get(self, broker_account_id: Optional[str], **kwargs: Any) -> Any:
+    def portfolio_get(
+        self, broker_account_id: Optional[str] = None, **kwargs: Any
+    ) -> Any:
         """GET /portfolio Получение портфеля клиента"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'GET', '/portfolio', response_model=PortfolioResponse, **kwargs
         )
 
     def portfolio_currencies_get(
-        self, broker_account_id: Optional[str], **kwargs: Any
+        self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
         """GET /portfolio/currencies Получение валютных активов клиента"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('brokerAccountId', broker_account_id)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
         return self.client.request(
             'GET',
             '/portfolio/currencies',
