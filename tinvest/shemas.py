@@ -363,6 +363,39 @@ class MarketInstrumentResponse(BaseModel):
         fields = {'tracking_id': {'alias': 'trackingId'}}
 
 
+class MarketOrderRequest(BaseModel):
+    lots: int
+    operation: OperationType
+
+
+class PlacedMarketOrder(BaseModel):
+    order_id: str
+    operation: OperationType
+    status: OrderStatus
+    reject_reason: Optional[str]
+    message: Optional[str]
+    requested_lots: int
+    executed_lots: int
+    commission: Optional[MoneyAmount]
+
+    class Config:
+        fields = {
+            'executed_lots': {'alias': 'executedLots'},
+            'order_id': {'alias': 'orderId'},
+            'reject_reason': {'alias': 'rejectReason'},
+            'requested_lots': {'alias': 'requestedLots'},
+        }
+
+
+class MarketOrderResponse(BaseModel):
+    payload: PlacedMarketOrder
+    status: str = 'Ok'
+    tracking_id: str
+
+    class Config:
+        fields = {'tracking_id': {'alias': 'trackingId'}}
+
+
 class OperationsResponse(BaseModel):
     payload: Operations
     status: str = 'Ok'
@@ -515,6 +548,8 @@ __all__ = (
     'MarketInstrumentList',
     'MarketInstrumentListResponse',
     'MarketInstrumentResponse',
+    'MarketOrderRequest',
+    'MarketOrderResponse',
     'MoneyAmount',
     'Operation',
     'OperationStatus',
@@ -535,6 +570,7 @@ __all__ = (
     'PortfolioCurrenciesResponse',
     'PortfolioPosition',
     'PortfolioResponse',
+    'PlacedMarketOrder',
     'SandboxAccount',
     'SandboxCurrency',
     'SandboxSetCurrencyBalanceRequest',

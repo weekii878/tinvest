@@ -7,6 +7,8 @@ from .shemas import (
     LimitOrderRequest,
     LimitOrderResponse,
     MarketInstrumentListResponse,
+    MarketOrderRequest,
+    MarketOrderResponse,
     OperationsResponse,
     OrderbookResponse,
     OrdersResponse,
@@ -131,6 +133,24 @@ class OrdersApi(BaseApi):
         kwargs.setdefault('data', body.json(by_alias=True))
         return self.client.request(
             'POST', '/orders/limit-order', response_model=LimitOrderResponse, **kwargs,
+        )
+
+    def orders_market_order(
+        self,
+        figi: str,
+        body: MarketOrderRequest,
+        broker_account_id: Optional[str] = None,
+        **kwargs: Any
+    ) -> Any:
+        """POST /orders/market-order Создание рыночной заявки"""
+        kwargs.setdefault('params', {})
+        params = kwargs['params']
+        params.setdefault('figi', figi)
+        if broker_account_id:
+            params.setdefault('brokerAccountId', broker_account_id)
+        kwargs.setdefault('data', body.json(by_alias=True))
+        return self.client.request(
+            'POST', '/orders/market-order', response_model=MarketOrderResponse, **kwargs
         )
 
     def orders_cancel_post(

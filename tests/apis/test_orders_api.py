@@ -4,6 +4,8 @@ from tinvest import (
     Empty,
     LimitOrderRequest,
     LimitOrderResponse,
+    MarketOrderRequest,
+    MarketOrderResponse,
     OperationType,
     OrdersApi,
     OrdersResponse,
@@ -32,6 +34,18 @@ def test_orders_limit_order_post(api_client, http_client, figi, broker_account_i
         'POST',
         '/orders/limit-order',
         response_model=LimitOrderResponse,
+        params={'figi': figi, 'brokerAccountId': broker_account_id},
+        data=body.json(by_alias=True),
+    )
+
+
+def test_orders_market_order_post(api_client, http_client, figi, broker_account_id):
+    body = MarketOrderRequest(lots=1, operation=OperationType.buy)
+    api_client.orders_market_order(figi, body, broker_account_id)
+    http_client.request.assert_called_once_with(
+        'POST',
+        '/orders/market-order',
+        response_model=MarketOrderResponse,
         params={'figi': figi, 'brokerAccountId': broker_account_id},
         data=body.json(by_alias=True),
     )
