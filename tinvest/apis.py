@@ -281,7 +281,7 @@ class MarketApi(BaseApi):
         return self.client.request(
             'GET',
             '/market/search/by-ticker',
-            response_model=SearchMarketInstrumentResponse,
+            response_model=MarketInstrumentListResponse,
             **kwargs,
         )
 

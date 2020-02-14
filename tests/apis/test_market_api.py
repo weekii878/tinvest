@@ -90,6 +90,6 @@ def test_market_search_by_ticker_get(api_client, http_client):
     http_client.request.assert_called_once_with(
         'GET',
         '/market/search/by-ticker',
-        response_model=SearchMarketInstrumentResponse,
+        response_model=MarketInstrumentListResponse,
         params={'ticker': ticker},
     )

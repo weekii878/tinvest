@@ -20,6 +20,7 @@ lint:
 	$(BIN)mypy $(CODE) tests
 
 pretty:
+	$(BIN)autoflake --recursive --in-place --remove-all-unused-imports $(CODE)
 	$(BIN)isort --apply --recursive $(CODE) tests
 	$(BIN)black --skip-string-normalization --line-length=88 $(CODE) tests
 	$(BIN)unify --in-place --recursive $(CODE) tests

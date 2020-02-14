@@ -135,6 +135,7 @@ class MarketInstrument(BaseModel):
     min_price_increment: Optional[float]
     name: str
     ticker: str
+    type: InstrumentType
 
     class Config:
         fields = {'min_price_increment': {'alias': 'minPriceIncrement'}}
