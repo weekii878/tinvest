@@ -1,11 +1,11 @@
 
 .PHONY: init test lint pretty precommit_install bump_major bump_minor bump_patch
 
-BIN = .venv/bin/
+BIN ?= .venv/bin/
 
 CODE = tinvest
 
-init:
+venv:
 	python3 -m venv .venv
 	poetry install
 
@@ -19,21 +19,8 @@ lint:
 	$(BIN)pytest --dead-fixtures --dup-fixtures
 	$(BIN)mypy $(CODE) tests
 
-pretty:
+format:
 	$(BIN)autoflake --recursive --in-place --remove-all-unused-imports $(CODE)
 	$(BIN)isort --apply --recursive $(CODE) tests
 	$(BIN)black --skip-string-normalization --line-length=88 $(CODE) tests
 	$(BIN)unify --in-place --recursive $(CODE) tests
-
-precommit_install:
-	echo '#!/bin/sh\nmake lint test\n' > .git/hooks/pre-commit
-	chmod +x .git/hooks/pre-commit
-
-bump_major:
-	$(BIN)bumpversion major
-
-bump_minor:
-	$(BIN)bumpversion minor
-
-bump_patch:
-	$(BIN)bumpversion patch

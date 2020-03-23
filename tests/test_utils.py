@@ -1,4 +1,8 @@
-from tinvest.utils import set_default_headers
+from datetime import datetime
+
+import pytest
+
+from tinvest.utils import isoformat, set_default_headers
 
 
 def test_set_default_headers(token):
@@ -21,3 +25,14 @@ def test_set_default_headers_with_headers(token):
             'X-Custom-Header': 'value',
         }
     }
+
+
+@pytest.mark.parametrize(
+    ('dt', 'expected'),
+    [
+        ('2000-01-01T00:00:00+00:00', '2000-01-01T00:00:00+00:00'),
+        (datetime(2000, 1, 1), '2000-01-01T00:00:00+00:00'),
+    ],
+)
+def test_isoformat(dt, expected):
+    assert isoformat(dt) == expected

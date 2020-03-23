@@ -21,6 +21,8 @@ from .shemas import (
     SearchMarketInstrumentResponse,
     UserAccountsResponse,
 )
+from .typedefs import datetime_or_str
+from .utils import isoformat
 
 
 class BaseApi:
@@ -248,14 +250,19 @@ class MarketApi(BaseApi):
         )
 
     def market_candles_get(
-        self, figi: str, from_: str, to: str, interval: CandleResolution, **kwargs: Any
+        self,
+        figi: str,
+        from_: datetime_or_str,
+        to: datetime_or_str,
+        interval: CandleResolution,
+        **kwargs: Any
     ) -> Any:
         """GET /market/candles Получение исторических свечей по FIGI"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
-        params.setdefault('from', from_)
-        params.setdefault('to', to)
+        params.setdefault('from', isoformat(from_))
+        params.setdefault('to', isoformat(to))
         params.setdefault('interval', interval)
         return self.client.request(
             'GET', '/market/candles', response_model=CandlesResponse, **kwargs
@@ -290,13 +297,17 @@ class OperationsApi(BaseApi):
     """Получении информации по операциям"""
 
     def operations_get(
-        self, from_: str, to: str, figi: Optional[str] = None, **kwargs: Any
+        self,
+        from_: datetime_or_str,
+        to: datetime_or_str,
+        figi: Optional[str] = None,
+        **kwargs: Any
     ) -> Any:
         """GET /operations Получение списка операций"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
-        params.setdefault('from', from_)
-        params.setdefault('to', to)
+        params.setdefault('from', isoformat(from_))
+        params.setdefault('to', isoformat(to))
         if figi:
             params.setdefault('figi', figi)
         return self.client.request(

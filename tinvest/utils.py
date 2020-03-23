@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import typing
+from datetime import datetime, timezone
 
 from .typedefs import AnyDict
 
@@ -52,4 +53,10 @@ async def run_in_threadpool(
     return await loop.run_in_executor(None, func, *args)
 
 
-__all__ = ('set_default_headers', 'Func', 'run_in_threadpool')
+def isoformat(dt: typing.Union[str, datetime]) -> str:
+    if isinstance(dt, str):
+        return dt
+    return dt.replace(tzinfo=timezone.utc).isoformat()
+
+
+__all__ = ('set_default_headers', 'Func', 'run_in_threadpool', 'isoformat')
