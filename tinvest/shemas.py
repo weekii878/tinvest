@@ -50,7 +50,7 @@ class OperationType(str, Enum):
 
 class OperationTypeWithCommission(str, Enum):
     buy = 'Buy'
-    buycard = 'BuyCard'
+    buy_card = 'BuyCard'
     sell = 'Sell'
     broker_commission = 'BrokerCommission'
     exchange_commission = 'ExchangeCommission'
