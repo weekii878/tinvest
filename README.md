@@ -85,7 +85,7 @@ async def handle_error(
 
 @events.startup()
 async def startup(api: tinvest.StreamingApi):
-    await api.candle.subscribe("BBG0013HGFT4", "1min")
+    await api.candle.subscribe("BBG0013HGFT4", tinvest.CandleResolution.min1)
     await api.orderbook.subscribe("BBG0013HGFT4", 5, "123ASD1123")
     await api.instrument_info.subscribe("BBG0013HGFT4")
 

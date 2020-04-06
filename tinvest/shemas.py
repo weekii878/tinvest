@@ -28,6 +28,12 @@ class Currency(str, Enum):
     rub = 'RUB'
     usd = 'USD'
     eur = 'EUR'
+    gbp = 'GBP'
+    hkd = 'HKD'
+    chf = 'CHF'
+    jpy = 'JPY'
+    cny = 'CNY'
+    try_ = 'TRY'
 
 
 class InstrumentType(str, Enum):
@@ -93,6 +99,12 @@ class SandboxCurrency(str, Enum):
     rub = 'RUB'
     usd = 'USD'
     eur = 'EUR'
+    gbp = 'GBP'
+    hkd = 'HKD'
+    chf = 'CHF'
+    jpy = 'JPY'
+    cny = 'CNY'
+    try_ = 'TRY'
 
 
 class TradeStatus(str, Enum):

@@ -111,6 +111,14 @@ async def test_streaming_candle(streaming_api, ws, figi, action):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('action', ['subscribe', 'unsubscribe'])
+async def test_streaming_candle_error(streaming_api, ws, figi, action):
+    with pytest.raises(ValueError):
+        await getattr(streaming_api.candle, action)(figi, 'invalid data')
+    ws.send_json.assert_not_called()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('action', ['subscribe', 'unsubscribe'])
 async def test_streaming_orderbook(streaming_api, ws, figi, action):
     await getattr(streaming_api.orderbook, action)(figi, 5)
     ws.send_json.assert_called_once()
