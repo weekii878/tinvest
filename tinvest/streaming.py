@@ -1,17 +1,18 @@
 import asyncio
 import logging
+from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
 
 from .constants import STREAMING
 from .shemas import (
     CandleResolution,
-    CandleStreamingSchema,
-    ErrorStreamingSchema,
-    InstrumentInfoStreamingSchema,
-    OrderbookStreamingSchema,
+    CandleStreaming,
+    ErrorStreaming,
+    InstrumentInfoStreaming,
+    OrderbookStreaming,
 )
 from .typedefs import AnyDict
 from .utils import Func
@@ -40,10 +41,10 @@ def _retry(func):
 class Streaming:
 
     schemas: Dict[EventName, Any] = {
-        EventName.candle: CandleStreamingSchema,
-        EventName.orderbook: OrderbookStreamingSchema,
-        EventName.instrument_info: InstrumentInfoStreamingSchema,
-        EventName.error: ErrorStreamingSchema,
+        EventName.candle: CandleStreaming,
+        EventName.orderbook: OrderbookStreaming,
+        EventName.instrument_info: InstrumentInfoStreaming,
+        EventName.error: ErrorStreaming,
     }
 
     def __init__(  # pylint: disable=R0913
@@ -77,6 +78,10 @@ class Streaming:
         else:
             self._handlers.extend(handlers.handlers)
 
+        for _, handler in self._handlers:
+            handler.receive_server_time__ = (  # type:ignore
+                'server_time' in handler.__code__.co_varnames
+            )
         return self
 
     @_retry
@@ -108,14 +113,20 @@ class Streaming:
             async for msg in ws:
                 if msg.type == aiohttp.WSMsgType.TEXT:
                     data = msg.json()
+
                     event_name = data['event']
                     payload = data['payload']
-                    funcs = self._get_handlers(event_name)
+                    server_time = datetime.fromisoformat(data['time'][:26])
+
                     if event_name in self.schemas:
                         data = self.schemas[event_name].parse_obj(payload)
                     else:
                         data = payload
-                    await asyncio.gather(*[Func(func, api, data)() for func in funcs])
+
+                    await asyncio.gather(
+                        *self._call_handlers(event_name, api, data, server_time)
+                    )
+
                 elif msg.type == aiohttp.WSMsgType.CLOSED:
                     break
                 elif msg.type == aiohttp.WSMsgType.ERROR:
@@ -125,8 +136,25 @@ class Streaming:
             await self._cleanup(api)
             raise
 
+    def _call_handlers(
+        self,
+        event_name: EventName,
+        api: 'StreamingApi',
+        data: Any,
+        server_time: datetime,
+    ) -> List[Coroutine[Any, Any, None]]:
+        funcs = []
+        for func in self._get_handlers(event_name):
+            kwargs = {}
+            if func.receive_server_time__:
+                kwargs['server_time'] = server_time
+
+            funcs.append(Func(func, api, data, **kwargs)())
+
+        return funcs
+
     def _get_handlers(self, event_name):
-        return [func for name, func in self._handlers if name == event_name]
+        return (func for name, func in self._handlers if name == event_name)
 
     async def _cleanup(self, api) -> None:
         funcs = self._get_handlers('cleanup')

@@ -42,27 +42,27 @@ def fake_handler(streaming_events, mocker):
 @pytest.fixture()
 def _handlers(streaming_events):
     @streaming_events.startup()
-    def startup():
+    def startup(*args):
         pass
 
     @streaming_events.candle()
-    def candle():
+    def candle(*args, **kwargs):
         pass
 
     @streaming_events.orderbook()
-    def orderbook():
+    def orderbook(*args, **kwargs):
         pass
 
     @streaming_events.instrument_info()
-    def instrument_info():
+    def instrument_info(*args, **kwargs):
         pass
 
     @streaming_events.error()
-    def error():
+    def error(*args, **kwargs):
         pass
 
     @streaming_events.cleanup()
-    def cleanup():
+    def cleanup(*args):
         pass
 
 
@@ -131,7 +131,8 @@ async def test_streaming_instrument_info(streaming_api, ws, figi, action):
     ws.send_json.assert_called_once()
 
 
-def test_streaming_without_token():
+@pytest.mark.asyncio
+async def test_streaming_without_token():
     with pytest.raises(ValueError):
         Streaming('')
 
@@ -147,3 +148,13 @@ def test_streaming_get_handlers(streaming, event_name):
 @pytest.mark.asyncio
 async def test_streaming_cleanup(streaming, streaming_api):
     await streaming._cleanup(streaming_api)
+
+
+@pytest.mark.asyncio
+async def test_streaming_server_time_in_handler():
+    def func(api, payload, server_time):
+        pass
+
+    Streaming('TOKEN').add_handlers([('some_event', func)])
+
+    assert func.receive_server_time__

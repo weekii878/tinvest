@@ -47,6 +47,7 @@ pip install tinvest
 
 ```python
 import asyncio
+from datetime import datetime
 
 import tinvest
 
@@ -57,28 +58,30 @@ events = tinvest.StreamingEvents()
 
 @events.candle()
 async def handle_candle(
-    api: tinvest.StreamingApi, payload: tinvest.CandleStreamingSchema
+    api: tinvest.StreamingApi,
+    payload: tinvest.CandleStreaming,
+    server_time: datetime  # [optional] if you want
 ):
     print(payload)
 
 
 @events.orderbook()
 async def handle_orderbook(
-    api: tinvest.StreamingApi, payload: tinvest.OrderbookStreamingSchema
+    api: tinvest.StreamingApi, payload: tinvest.OrderbookStreaming
 ):
     print(payload)
 
 
 @events.instrument_info()
 async def handle_instrument_info(
-    api: tinvest.StreamingApi, payload: tinvest.InstrumentInfoStreamingSchema
+    api: tinvest.StreamingApi, payload: tinvest.InstrumentInfoStreaming
 ):
     print(payload)
 
 
 @events.error()
 async def handle_error(
-    api: tinvest.StreamingApi, payload: tinvest.ErrorStreamingSchema
+    api: tinvest.StreamingApi, payload: tinvest.ErrorStreaming
 ):
     print(payload)
 

@@ -519,7 +519,7 @@ class UserAccountsResponse(BaseModel):
         fields = {'tracking_id': {'alias': 'trackingId'}}
 
 
-class InstrumentInfoStreamingSchema(BaseModel):
+class InstrumentInfoStreaming(BaseModel):
     figi: str
     trade_status: str
     min_price_increment: float
@@ -529,19 +529,28 @@ class InstrumentInfoStreamingSchema(BaseModel):
     limit_down: Optional[float]
 
 
-class OrderbookStreamingSchema(BaseModel):
+InstrumentInfoStreamingSchema = InstrumentInfoStreaming  # DEPRECATED
+
+
+class OrderbookStreaming(BaseModel):
     figi: str
     depth: int
     bids: List[Tuple[float, float]]
     asks: List[Tuple[float, float]]
 
 
-class ErrorStreamingSchema(BaseModel):
+OrderbookStreamingSchema = OrderbookStreaming  # DEPRECATED
+
+
+class ErrorStreaming(BaseModel):
     error: str
     request_id: Optional[str]
 
 
-CandleStreamingSchema = Candle
+ErrorStreamingSchema = ErrorStreaming  # DEPRECATED
+
+CandleStreaming = Candle
+CandleStreamingSchema = Candle  # DEPRECATED
 
 
 __all__ = (
@@ -597,4 +606,12 @@ __all__ = (
     'UserAccount',
     'UserAccounts',
     'UserAccountsResponse',
+    'InstrumentInfoStreamingSchema',
+    'OrderbookStreamingSchema',
+    'ErrorStreamingSchema',
+    'CandleStreamingSchema',
+    'InstrumentInfoStreaming',
+    'OrderbookStreaming',
+    'ErrorStreaming',
+    'CandleStreaming',
 )
