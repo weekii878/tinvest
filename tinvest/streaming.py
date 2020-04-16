@@ -2,6 +2,7 @@ import asyncio
 import logging
 from datetime import datetime
 from enum import Enum
+from functools import wraps
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
@@ -15,7 +16,7 @@ from .shemas import (
     OrderbookStreaming,
 )
 from .typedefs import AnyDict
-from .utils import Func
+from .utils import Func, parse_datetime
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,14 @@ class EventName(str, Enum):
     error = 'error'
 
 
+class ServiceEventName(str, Enum):
+    startup = 'startup'
+    cleanup = 'cleanup'
+    reconnect = 'reconnect'
+
+
 def _retry(func):
+    @wraps(func)
     async def wrapper(self):
         while True:
             await func(self)
@@ -103,11 +111,13 @@ class Streaming:
         except aiohttp.ClientConnectorError as e:
             logger.error('Connection error: %s. Try to reconnect', e)
             await asyncio.sleep(self._reconnect_timeout)
+        funcs = self._get_handlers(ServiceEventName.reconnect)
+        await asyncio.gather(*[Func(func)() for func in funcs])
 
     async def _run(self, ws):
         api = StreamingApi(ws, self._state)
         try:
-            funcs = self._get_handlers('startup')
+            funcs = self._get_handlers(ServiceEventName.startup)
             await asyncio.gather(*[Func(func, api)() for func in funcs])
 
             async for msg in ws:
@@ -116,7 +126,7 @@ class Streaming:
 
                     event_name = data['event']
                     payload = data['payload']
-                    server_time = datetime.fromisoformat(data['time'][:26])
+                    server_time = parse_datetime(data['time'])
 
                     if event_name in self.schemas:
                         data = self.schemas[event_name].parse_obj(payload)
@@ -157,7 +167,7 @@ class Streaming:
         return (func for name, func in self._handlers if name == event_name)
 
     async def _cleanup(self, api) -> None:
-        funcs = self._get_handlers('cleanup')
+        funcs = self._get_handlers(ServiceEventName.cleanup)
         await asyncio.gather(*[Func(func, api)() for func in funcs])
         await self._session.close()
 
@@ -270,7 +280,7 @@ class StreamingEvents:
         return decorator
 
     def startup(self):
-        return self._decorator_wrapper('startup')
+        return self._decorator_wrapper(ServiceEventName.startup)
 
     def candle(self):
         return self._decorator_wrapper(EventName.candle)
@@ -285,7 +295,10 @@ class StreamingEvents:
         return self._decorator_wrapper(EventName.error)
 
     def cleanup(self):
-        return self._decorator_wrapper('cleanup')
+        return self._decorator_wrapper(ServiceEventName.cleanup)
+
+    def reconnect(self):
+        return self._decorator_wrapper(ServiceEventName.reconnect)
 
 
 class StreamingApi:

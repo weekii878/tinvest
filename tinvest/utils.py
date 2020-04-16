@@ -1,7 +1,7 @@
 import asyncio
 import functools
 import typing
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from .typedefs import AnyDict
 
@@ -59,4 +59,21 @@ def isoformat(dt: typing.Union[str, datetime]) -> str:
     return dt.replace(tzinfo=timezone.utc).isoformat()
 
 
-__all__ = ('set_default_headers', 'Func', 'run_in_threadpool', 'isoformat')
+def parse_datetime(date_string: str) -> datetime:
+    if '.' in date_string:
+        dt_string, _, us = date_string.partition('.')
+    else:
+        dt_string = date_string.rstrip('Z')
+        us = 'Z'
+    dt = datetime.strptime(dt_string, '%Y-%m-%dT%H:%M:%S')
+    seconds = float('0.' + us.rstrip('Z'))
+    return dt + timedelta(seconds=seconds)
+
+
+__all__ = (
+    'set_default_headers',
+    'Func',
+    'run_in_threadpool',
+    'isoformat',
+    'parse_datetime',
+)

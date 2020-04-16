@@ -56,6 +56,11 @@ TOKEN = "<TOKEN>"
 events = tinvest.StreamingEvents()
 
 
+@events.reconnect()
+def handle_reconnect():
+    print('Reconnecting')
+
+
 @events.candle()
 async def handle_candle(
     api: tinvest.StreamingApi,
