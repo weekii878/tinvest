@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from .shemas import (
+from .schemas import (
     CandleResolution,
     CandlesResponse,
     Empty,
@@ -35,10 +35,10 @@ class BaseApi:
 
 
 class SandboxApi(BaseApi):
-    """Операция в sandbox"""
-
     def sandbox_register_post(self, body: SandboxRegisterRequest, **kwargs: Any) -> Any:
-        """POST /sandbox/register Регистрация клиента в sandbox"""
+        """
+        POST /sandbox/register
+        """
         kwargs.setdefault('data', body.json(by_alias=True))
         return self.client.request(
             'POST',
@@ -53,8 +53,9 @@ class SandboxApi(BaseApi):
         broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
-        """POST /sandbox/currencies/balance
-        Выставление баланса по валютным позициям"""
+        """
+        POST /sandbox/currencies/balance
+        """
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -70,8 +71,9 @@ class SandboxApi(BaseApi):
         broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
-        """POST /sandbox/positions/balance
-        Выставление баланса по инструментным позициям"""
+        """
+        POST /sandbox/positions/balance
+        """
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -84,7 +86,7 @@ class SandboxApi(BaseApi):
     def sandbox_remove_post(
         self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
-        """POST /sandbox/remove Удаление счета клиента"""
+        """POST /sandbox/remove"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -96,7 +98,7 @@ class SandboxApi(BaseApi):
     def sandbox_clear_post(
         self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
-        """POST /sandbox/clear Удаление всех позиций"""
+        """POST /sandbox/clear"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -107,10 +109,8 @@ class SandboxApi(BaseApi):
 
 
 class OrdersApi(BaseApi):
-    """Операции заявок"""
-
     def orders_get(self, broker_account_id: Optional[str] = None, **kwargs: Any) -> Any:
-        """GET /orders Получение списка активных заявок"""
+        """GET /orders"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -126,7 +126,7 @@ class OrdersApi(BaseApi):
         broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
-        """POST /orders/limit-order Создание лимитной заявки"""
+        """POST /orders/limit-order"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
@@ -144,7 +144,7 @@ class OrdersApi(BaseApi):
         broker_account_id: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
-        """POST /orders/market-order Создание рыночной заявки"""
+        """POST /orders/market-order"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
@@ -158,7 +158,7 @@ class OrdersApi(BaseApi):
     def orders_cancel_post(
         self, order_id: str, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
-        """POST /orders/cancel Отмена заявки"""
+        """POST /orders/cancel"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('orderId', order_id)
@@ -170,12 +170,10 @@ class OrdersApi(BaseApi):
 
 
 class PortfolioApi(BaseApi):
-    """Операции с портфелем пользователя"""
-
     def portfolio_get(
         self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
-        """GET /portfolio Получение портфеля клиента"""
+        """GET /portfolio"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -187,7 +185,7 @@ class PortfolioApi(BaseApi):
     def portfolio_currencies_get(
         self, broker_account_id: Optional[str] = None, **kwargs: Any
     ) -> Any:
-        """GET /portfolio/currencies Получение валютных активов клиента"""
+        """GET /portfolio/currencies"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         if broker_account_id:
@@ -201,10 +199,8 @@ class PortfolioApi(BaseApi):
 
 
 class MarketApi(BaseApi):
-    """Получении информации по бумагам"""
-
     def market_stocks_get(self, **kwargs: Any) -> Any:
-        """GET /market/stocks Получение списка акций"""
+        """GET /market/stocks"""
         return self.client.request(
             'GET',
             '/market/stocks',
@@ -213,7 +209,7 @@ class MarketApi(BaseApi):
         )
 
     def market_bonds_get(self, **kwargs: Any) -> Any:
-        """GET /market/bonds Получение списка облигаций"""
+        """GET /market/bonds"""
         return self.client.request(
             'GET',
             '/market/bonds',
@@ -222,7 +218,7 @@ class MarketApi(BaseApi):
         )
 
     def market_etfs_get(self, **kwargs: Any) -> Any:
-        """GET /market/etfs Получение списка ETF"""
+        """GET /market/etfs"""
         return self.client.request(
             'GET',
             '/market/etfs',
@@ -231,7 +227,7 @@ class MarketApi(BaseApi):
         )
 
     def market_currencies_get(self, **kwargs: Any) -> Any:
-        """GET /market/currencies Получение списка валютных пар"""
+        """GET /market/currencies"""
         return self.client.request(
             'GET',
             '/market/currencies',
@@ -240,7 +236,7 @@ class MarketApi(BaseApi):
         )
 
     def market_orderbook_get(self, figi: str, depth: int, **kwargs: Any) -> Any:
-        """GET /market/orderbook Получение стакана"""
+        """GET /market/orderbook"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
@@ -257,7 +253,7 @@ class MarketApi(BaseApi):
         interval: CandleResolution,
         **kwargs: Any
     ) -> Any:
-        """GET /market/candles Получение исторических свечей по FIGI"""
+        """GET /market/candles"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
@@ -269,7 +265,7 @@ class MarketApi(BaseApi):
         )
 
     def market_search_by_figi_get(self, figi: str, **kwargs: Any) -> Any:
-        """GET /market/search/by-figi Получение инструмента по FIGI"""
+        """GET /market/search/by-figi"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('figi', figi)
@@ -281,7 +277,7 @@ class MarketApi(BaseApi):
         )
 
     def market_search_by_ticker_get(self, ticker: str, **kwargs: Any) -> Any:
-        """GET /market/search/by-ticker Получение инструмента по тикеру"""
+        """GET /market/search/by-ticker"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('ticker', ticker)
@@ -294,8 +290,6 @@ class MarketApi(BaseApi):
 
 
 class OperationsApi(BaseApi):
-    """Получении информации по операциям"""
-
     def operations_get(
         self,
         from_: datetime_or_str,
@@ -303,7 +297,7 @@ class OperationsApi(BaseApi):
         figi: Optional[str] = None,
         **kwargs: Any
     ) -> Any:
-        """GET /operations Получение списка операций"""
+        """GET /operations"""
         kwargs.setdefault('params', {})
         params = kwargs['params']
         params.setdefault('from', isoformat(from_))
@@ -316,10 +310,8 @@ class OperationsApi(BaseApi):
 
 
 class UserApi(BaseApi):
-    """Получении информации по брокерским счетам"""
-
     def accounts_get(self, **kwargs):
-        """GET /user/accounts Получение брокерских счетов клиента"""
+        """GET /user/accounts"""
         return self.client.request(
             'GET', '/user/accounts', response_model=UserAccountsResponse, **kwargs
         )

@@ -113,6 +113,8 @@ class TradeStatus(str, Enum):
 
 
 class MoneyAmount(BaseModel):
+    """MoneyAmount"""
+
     currency: Currency
     value: float
 
@@ -553,6 +555,19 @@ CandleStreaming = Candle
 CandleStreamingSchema = Candle  # DEPRECATED
 
 
+class EventName(str, Enum):
+    candle = 'candle'
+    orderbook = 'orderbook'
+    instrument_info = 'instrument_info'
+    error = 'error'
+
+
+class ServiceEventName(str, Enum):
+    startup = 'startup'
+    cleanup = 'cleanup'
+    reconnect = 'reconnect'
+
+
 __all__ = (
     'BrokerAccountType',
     'Candle',
@@ -614,4 +629,6 @@ __all__ = (
     'OrderbookStreaming',
     'ErrorStreaming',
     'CandleStreaming',
+    'EventName',
+    'ServiceEventName',
 )

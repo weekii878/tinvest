@@ -3,7 +3,7 @@ from typing import Any
 from requests import Response, Session, session
 
 from .base_client import BaseClient
-from .shemas import Error
+from .schemas import Error
 from .utils import set_default_headers
 
 

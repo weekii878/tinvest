@@ -1,6 +1,6 @@
 from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi, UserApi
 from .async_client import AsyncClient
-from .shemas import (
+from .schemas import (
     BrokerAccountType,
     Candle,
     CandleResolution,

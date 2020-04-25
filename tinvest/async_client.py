@@ -4,7 +4,7 @@ from typing import Any, AsyncIterator
 from aiohttp import ClientResponse, ClientSession
 
 from .base_client import BaseClient
-from .shemas import Error
+from .schemas import Error
 from .utils import set_default_headers
 
 

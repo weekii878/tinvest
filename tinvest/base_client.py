@@ -10,7 +10,7 @@ class BaseClient(Generic[T]):
         self, token: str, *, use_sandbox: bool = False, session: Optional[T] = None
     ):
         if not token:
-            raise ValueError('Token cannot be empty')
+            raise ValueError('Token can not be empty')
         self._base_url: str = PRODUCTION
         if use_sandbox:
             self._base_url = SANDBOX

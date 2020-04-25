@@ -7,13 +7,35 @@ repo_url: 'https://github.com/daxartio/tinvest'
 
 copyright: 'Copyright &copy; 2020 Tinvest'
 
+nav:
+  - 'Главная': index.md
+  - 'tinvest':
+    - apis.py: tinvest/apis.md
+    - streaming.py: tinvest/streaming.md
+
 theme:
-  name: readthedocs
+  name: material
   language: ru
+  palette:
+    primary: black
+    accent: yellow
 
 plugins:
 - search:
     lang: ru
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        rendering:
+          show_source: true
+    watch:
+      - tinvest
 
-nav:
-- 'Главная': index.md
+extra_css:
+  - custom.css
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences

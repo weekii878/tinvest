@@ -1,19 +1,20 @@
 import asyncio
 import logging
 from datetime import datetime
-from enum import Enum
 from functools import wraps
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
 
 from .constants import STREAMING
-from .shemas import (
+from .schemas import (
     CandleResolution,
     CandleStreaming,
     ErrorStreaming,
+    EventName,
     InstrumentInfoStreaming,
     OrderbookStreaming,
+    ServiceEventName,
 )
 from .typedefs import AnyDict
 from .utils import Func, parse_datetime
@@ -22,19 +23,6 @@ logger = logging.getLogger(__name__)
 
 
 _Handler = Tuple[str, Callable]
-
-
-class EventName(str, Enum):
-    candle = 'candle'
-    orderbook = 'orderbook'
-    instrument_info = 'instrument_info'
-    error = 'error'
-
-
-class ServiceEventName(str, Enum):
-    startup = 'startup'
-    cleanup = 'cleanup'
-    reconnect = 'reconnect'
 
 
 def _retry(func):
@@ -47,7 +35,6 @@ def _retry(func):
 
 
 class Streaming:
-
     schemas: Dict[EventName, Any] = {
         EventName.candle: CandleStreaming,
         EventName.orderbook: OrderbookStreaming,
@@ -65,9 +52,31 @@ class Streaming:
         receive_timeout: Optional[float] = 5,
         heartbeat: Optional[float] = 3,
     ) -> None:
+        """
+        ```python
+        import tinvest
+
+        events = tinvest.StreamingEvents()
+
+        ...
+
+        async def main():
+            await (
+                tinvest.Streaming("TOKEN", state={"postgres": ...})
+                .add_handlers(events)
+                .run()
+            )
+
+        if __name__ == "__main__":
+            try:
+                asyncio.run(main())
+            except KeyboardInterrupt:
+                pass
+        ```
+        """
         super().__init__()
         if not token:
-            raise ValueError('Token cannot be empty')
+            raise ValueError('Token can not be empty')
         self._api: str = STREAMING
         self._token: str = token
         self._session: aiohttp.ClientSession = session or aiohttp.ClientSession()
@@ -269,6 +278,14 @@ class InstrumentInfoEvent(_BaseEvent):
 
 
 class StreamingEvents:
+    """
+    ```python
+    import tinvest
+
+    events = tinvest.StreamingEvents()
+    ```
+    """
+
     def __init__(self) -> None:
         self.handlers: List[_Handler] = []
 
@@ -280,24 +297,100 @@ class StreamingEvents:
         return decorator
 
     def startup(self):
+        """
+        ```python
+        @events.startup()
+        async def startup(api: tinvest.StreamingApi):
+            await api.candle.subscribe("BBG0013HGFT4", tinvest.CandleResolution.min1)
+            await api.orderbook.subscribe("BBG0013HGFT4", 5, "123ASD1123")
+            await api.instrument_info.subscribe("BBG0013HGFT4")
+        ```
+        """
         return self._decorator_wrapper(ServiceEventName.startup)
 
     def candle(self):
+        """
+        ```python
+        @events.candle()
+        async def handle_candle(
+            api: tinvest.StreamingApi,
+            payload: tinvest.CandleStreaming,
+            server_time: datetime  # [optional] if you want
+        ):
+            pass
+        ```
+        ```python
+        @events.candle()
+        async def handle_candle(
+            api: tinvest.StreamingApi,
+            payload: tinvest.CandleStreaming,
+        ):
+            pass
+        ```
+        """
         return self._decorator_wrapper(EventName.candle)
 
     def orderbook(self):
+        """
+        ```python
+        @events.orderbook()
+        async def handle_orderbook(
+            api: tinvest.StreamingApi, payload: tinvest.OrderbookStreaming
+        ):
+            pass
+        ```
+        """
         return self._decorator_wrapper(EventName.orderbook)
 
     def instrument_info(self):
+        """
+        ```python
+        @events.instrument_info()
+        async def handle_instrument_info(
+            api: tinvest.StreamingApi, payload: tinvest.InstrumentInfoStreaming
+        ):
+            pass
+        ```
+        """
         return self._decorator_wrapper(EventName.instrument_info)
 
     def error(self):
+        """
+        ```python
+        @events.error()
+        async def handle_error(
+            api: tinvest.StreamingApi, payload: tinvest.ErrorStreaming
+        ):
+            pass
+        ```
+        """
         return self._decorator_wrapper(EventName.error)
 
     def cleanup(self):
+        """
+        ```python
+        @events.cleanup()
+        async def cleanup(api: tinvest.StreamingApi):
+            await api.candle.unsubscribe("BBG0013HGFT4", "1min")
+            await api.orderbook.unsubscribe("BBG0013HGFT4", 5)
+            await api.instrument_info.unsubscribe("BBG0013HGFT4")
+        ```
+        """
         return self._decorator_wrapper(ServiceEventName.cleanup)
 
     def reconnect(self):
+        """
+        ```python
+        @events.reconnect()
+        def handle_reconnect():
+            pass
+        ```
+        ```python
+        @events.reconnect()
+        async def handle_reconnect():
+            pass
+        ```
+        """
         return self._decorator_wrapper(ServiceEventName.reconnect)
 
 
@@ -318,7 +411,6 @@ __all__ = (
     'Streaming',
     'StreamingApi',
     'StreamingEvents',
-    'EventName',
     'CandleEvent',
     'OrderbookEvent',
     'InstrumentInfoEvent',
