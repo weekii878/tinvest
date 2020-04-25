@@ -1,0 +1,19 @@
+site_name: Tinvest
+site_url: https://tinvest.readthedocs.io/ru/latest/
+site_description: 'Данный проект представляет собой инструментарий на языке Python для работы с OpenAPI Тинькофф Инвестиции, который можно использовать для создания торговых роботов.'
+
+repo_name: 'tinvest'
+repo_url: 'https://github.com/daxartio/tinvest'
+
+copyright: 'Copyright &copy; 2020 Tinvest'
+
+theme:
+  name: readthedocs
+  language: ru
+
+plugins:
+- search:
+    lang: ru
+
+nav:
+- 'Главная': index.md
