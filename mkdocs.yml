@@ -8,7 +8,7 @@ repo_url: 'https://github.com/daxartio/tinvest'
 copyright: 'Copyright &copy; 2020 Tinvest'
 
 nav:
-  - 'Главная': index.md
+  - 'Главная': README.md
   - 'tinvest':
     - apis.py: tinvest/apis.md
     - streaming.py: tinvest/streaming.md

@@ -17,6 +17,8 @@ pip install tinvest
 
 ## Начало работы
 
+[Документация](https://daxartio.github.io/tinvest/)
+
 ### Где взять токен аутентификации?
 
 В разделе инвестиций вашего  [личного кабинета tinkoff](https://www.tinkoff.ru/invest/) . Далее:
