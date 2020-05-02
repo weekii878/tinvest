@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from deprecated import deprecated
+
 from .schemas import (
     CandleResolution,
     CandlesResponse,
@@ -137,7 +139,7 @@ class OrdersApi(BaseApi):
             'POST', '/orders/limit-order', response_model=LimitOrderResponse, **kwargs,
         )
 
-    def orders_market_order(
+    def orders_market_order_post(
         self,
         figi: str,
         body: MarketOrderRequest,
@@ -154,6 +156,10 @@ class OrdersApi(BaseApi):
         return self.client.request(
             'POST', '/orders/market-order', response_model=MarketOrderResponse, **kwargs
         )
+
+    @deprecated(reason='use orders_market_order_post')
+    def orders_market_order(self, *args, **kwargs) -> Any:
+        return self.orders_market_order_post(*args, **kwargs)
 
     def orders_cancel_post(
         self, order_id: str, broker_account_id: Optional[str] = None, **kwargs: Any
@@ -259,7 +265,7 @@ class MarketApi(BaseApi):
         params.setdefault('figi', figi)
         params.setdefault('from', isoformat(from_))
         params.setdefault('to', isoformat(to))
-        params.setdefault('interval', interval)
+        params.setdefault('interval', interval.value)
         return self.client.request(
             'GET', '/market/candles', response_model=CandlesResponse, **kwargs
         )

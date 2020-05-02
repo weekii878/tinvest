@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tinvest"
-version = "1.0.21"
+version = "1.0.22"
 description = "Tinkoff Invest"
 authors = ["Danil Akhtarov <daxartio@gmail.com>"]
 license = "MIT"
@@ -14,6 +14,7 @@ python = ">=3.7,<4.0"
 aiohttp = ">=3.6,<4.0"
 pydantic = ">=1.2,<2"
 requests = ">=2.22,<3.0"
+Deprecated = "^1.2.9"
 
 [tool.poetry.dev-dependencies]
 asynctest = "^0.13"

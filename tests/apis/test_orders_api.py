@@ -41,7 +41,7 @@ def test_orders_limit_order_post(api_client, http_client, figi, broker_account_i
 
 def test_orders_market_order_post(api_client, http_client, figi, broker_account_id):
     body = MarketOrderRequest(lots=1, operation=OperationType.buy)
-    api_client.orders_market_order(figi, body, broker_account_id)
+    api_client.orders_market_order_post(figi, body, broker_account_id)
     http_client.request.assert_called_once_with(
         'POST',
         '/orders/market-order',
