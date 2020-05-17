@@ -26,6 +26,15 @@ from .schemas import (
 from .typedefs import datetime_or_str
 from .utils import isoformat
 
+__all__ = (
+    'MarketApi',
+    'OperationsApi',
+    'OrdersApi',
+    'PortfolioApi',
+    'SandboxApi',
+    'UserApi',
+)
+
 
 class BaseApi:
     def __init__(self, client: Any) -> None:
@@ -321,13 +330,3 @@ class UserApi(BaseApi):
         return self.client.request(
             'GET', '/user/accounts', response_model=UserAccountsResponse, **kwargs
         )
-
-
-__all__ = (
-    'MarketApi',
-    'OperationsApi',
-    'OrdersApi',
-    'PortfolioApi',
-    'SandboxApi',
-    'UserApi',
-)

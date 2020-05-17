@@ -7,6 +7,11 @@ from .base_client import BaseClient
 from .schemas import Error
 from .utils import set_default_headers
 
+__all__ = (
+    'AsyncClient',
+    'ResponseWrapper',
+)
+
 
 class ResponseWrapper:
     def __init__(self, response: ClientResponse, response_model: Any):
@@ -46,9 +51,3 @@ class AsyncClient(BaseClient[ClientSession]):
 
     async def close(self) -> None:
         await self.session.close()
-
-
-__all__ = (
-    'AsyncClient',
-    'ResponseWrapper',
-)

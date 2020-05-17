@@ -6,6 +6,8 @@ from .base_client import BaseClient
 from .schemas import Error
 from .utils import set_default_headers
 
+__all__ = ('SyncClient', 'ResponseWrapper')
+
 
 class ResponseWrapper:
     def __init__(self, response: Response, response_model: Any):
@@ -52,6 +54,3 @@ class SyncClient(BaseClient[Session]):
             response.raise_for_status()
 
         return response
-
-
-__all__ = ('SyncClient', 'ResponseWrapper')

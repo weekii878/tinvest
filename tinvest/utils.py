@@ -10,6 +10,14 @@ try:
 except ImportError:  # pragma: no cover
     contextvars = None  # type: ignore
 
+__all__ = (
+    'set_default_headers',
+    'Func',
+    'run_in_threadpool',
+    'isoformat',
+    'parse_datetime',
+)
+
 
 def set_default_headers(data: AnyDict, token: str) -> None:
     headers = data.get('headers', {})
@@ -68,12 +76,3 @@ def parse_datetime(date_string: str) -> datetime:
     dt = datetime.strptime(dt_string, '%Y-%m-%dT%H:%M:%S')
     seconds = float('0.' + us.rstrip('Z'))
     return dt + timedelta(seconds=seconds)
-
-
-__all__ = (
-    'set_default_headers',
-    'Func',
-    'run_in_threadpool',
-    'isoformat',
-    'parse_datetime',
-)

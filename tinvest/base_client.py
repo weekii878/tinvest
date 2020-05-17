@@ -2,6 +2,8 @@ from typing import Generic, Optional, TypeVar
 
 from .constants import PRODUCTION, SANDBOX
 
+__all__ = ('BaseClient',)
+
 T = TypeVar('T')
 
 
@@ -23,6 +25,3 @@ class BaseClient(Generic[T]):
         if self._session:
             return self._session
         raise AttributeError
-
-
-__all__ = ('BaseClient',)

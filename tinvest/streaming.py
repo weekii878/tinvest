@@ -19,6 +19,15 @@ from .schemas import (
 from .typedefs import AnyDict
 from .utils import Func, parse_datetime
 
+__all__ = (
+    'Streaming',
+    'StreamingApi',
+    'StreamingEvents',
+    'CandleEvent',
+    'OrderbookEvent',
+    'InstrumentInfoEvent',
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -405,13 +414,3 @@ class StreamingApi:
         if self._state and key in self._state:
             return self._state[key]
         raise KeyError
-
-
-__all__ = (
-    'Streaming',
-    'StreamingApi',
-    'StreamingEvents',
-    'CandleEvent',
-    'OrderbookEvent',
-    'InstrumentInfoEvent',
-)
