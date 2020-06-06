@@ -1,31 +1,29 @@
-from typing import Any
+from typing import Any, Type
 
 from requests import Response, Session, session
 
 from .base_client import BaseClient
-from .schemas import Error
+from .schemas import Error, T
 from .utils import set_default_headers
 
 __all__ = ('SyncClient', 'ResponseWrapper')
 
 
 class ResponseWrapper:
-    def __init__(self, response: Response, response_model: Any):
+    def __init__(self, response: Response, response_model: Type[T]):
         self._response = response
         self._response_model = response_model
 
     def __getattr__(self, name):
         return getattr(self._response, name)
 
-    def parse_json(self, **kwargs: Any) -> Any:
+    def parse_json(self, **kwargs: Any) -> T:
         return self._parse_json(self._response_model, **kwargs)
 
-    def parse_error(self, **kwargs: Any) -> Any:
+    def parse_error(self, **kwargs: Any) -> Error:
         return self._parse_json(Error, **kwargs)
 
-    def _parse_json(self, response_model: Any, **kwargs: Any) -> Any:
-        if response_model is None:
-            return self._response.json(**kwargs)
+    def _parse_json(self, response_model: Type[T], **kwargs: Any) -> T:
         return response_model.parse_obj(self._response.json(**kwargs))
 
 
@@ -39,7 +37,7 @@ class SyncClient(BaseClient[Session]):
         self,
         method: str,
         path: str,
-        response_model: Any = None,
+        response_model: Type[T],
         raise_for_status: bool = False,
         **kwargs: Any,
     ) -> ResponseWrapper:

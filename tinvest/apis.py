@@ -325,7 +325,7 @@ class OperationsApi(BaseApi):
 
 
 class UserApi(BaseApi):
-    def accounts_get(self, **kwargs):
+    def accounts_get(self, **kwargs: Any) -> Any:
         """GET /user/accounts"""
         return self.client.request(
             'GET', '/user/accounts', response_model=UserAccountsResponse, **kwargs

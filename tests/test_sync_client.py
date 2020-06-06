@@ -1,6 +1,7 @@
 import pytest
 
 from tinvest.constants import PRODUCTION
+from tinvest.schemas import Empty
 from tinvest.sync_client import Session, SyncClient
 
 
@@ -17,7 +18,7 @@ def client(token, session):
 
 
 def test_client_request(client, session, token):
-    client.request('get', '/some_url')
+    client.request('get', '/some_url', response_model=Empty)
     session.request.assert_called_once_with(
         method='get',
         url=f'{PRODUCTION}/some_url',
@@ -26,6 +27,6 @@ def test_client_request(client, session, token):
 
 
 def test_client_response(client):
-    response = client.request('get', '/some_url')
+    response = client.request('get', '/some_url', response_model=Empty)
     assert 'parse_json' in dir(response)
     assert 'parse_error' in dir(response)
