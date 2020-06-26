@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tinvest"
-version = "1.0.23"
+version = "1.0.24"
 description = "Tinkoff Invest"
 authors = ["Danil Akhtarov <daxartio@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ homepage = "https://pypi.org/project/tinvest"
 keywords = []
 
 [tool.poetry.scripts]
-tinvest = 'tinvest.__main__'
+tinvest = 'tinvest.cli.main:run'
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
