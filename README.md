@@ -19,7 +19,7 @@ pip install tinvest
 
 ### Где взять токен аутентификации?
 
-В разделе инвестиций вашего  [личного кабинета tinkoff](https://www.tinkoff.ru/invest/) . Далее:
+В разделе инвестиций вашего [личного кабинета tinkoff](https://www.tinkoff.ru/invest/) . Далее:
 
 * Перейдите в настройки
 * Проверьте, что функция "Подтверждение сделок кодом" отключена
@@ -28,9 +28,9 @@ pip install tinvest
 
 ## Документация
 
-[Документация (tinvest)](https://daxartio.github.io/tinvest/)
+[tinvest](https://daxartio.github.io/tinvest/)
 
-Документацию непосредственно по OpenAPI можно найти по [ссылке](https://api-invest.tinkoff.ru/openapi/docs/).
+[invest-openapi](https://tinkoffcreditsystems.github.io/invest-openapi/)
 
 ### Быстрый старт
 
@@ -43,9 +43,16 @@ pip install tinvest
 [Основной репозиторий с документацией](https://github.com/TinkoffCreditSystems/invest-openapi/) — в нем вы можете задать вопрос в Issues и получать информацию о релизах в Releases.
 Если возникают вопросы по данному SDK, нашёлся баг или есть предложения по улучшению, то можно задать его в Issues.
 
+Также можно выполнить команду в консоли.
+
+```
+tinvest issues
+tinvest issues openapi
+```
+
 ## Примеры
 
-Для работы с данным пакетом вам нужно изучить OpenAPI Тинькофф Инвестиции [ссылка](https://api-invest.tinkoff.ru/openapi/docs/)
+Для работы с данным пакетом вам нужно изучить [OpenAPI Тинькофф Инвестиции](https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/)
 
 ### Streaming
 

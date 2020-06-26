@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tinvest"
-version = "1.0.22"
+version = "1.0.23"
 description = "Tinkoff Invest"
 authors = ["Danil Akhtarov <daxartio@gmail.com>"]
 license = "MIT"
@@ -8,6 +8,9 @@ readme = 'README.md'
 repository = "https://github.com/daxartio/tinvest"
 homepage = "https://pypi.org/project/tinvest"
 keywords = []
+
+[tool.poetry.scripts]
+tinvest = 'tinvest.__main__'
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
@@ -47,6 +50,7 @@ pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-deadfixtures = "*"
 pytest-mock = "*"
+toml = "*"
 unify = "*"
 
 [build-system]

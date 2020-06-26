@@ -1,3 +1,6 @@
+__version__ = '1.0.23'
+__api_version__ = '20.3'
+
 from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi, UserApi
 from .async_client import AsyncClient
 from .schemas import (
