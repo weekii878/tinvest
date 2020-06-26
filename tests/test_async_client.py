@@ -6,7 +6,7 @@ from tinvest.constants import PRODUCTION
 from tinvest.schemas import Empty
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 async def session(mocker):
     _session = ClientSession()
     mocker.patch.object(

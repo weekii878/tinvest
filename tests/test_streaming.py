@@ -66,7 +66,7 @@ def _handlers(streaming_events):
         pass
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 async def streaming(token, streaming_events):
     s = Streaming(token).add_handlers(streaming_events)
     yield s
