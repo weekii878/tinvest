@@ -425,7 +425,7 @@ description = "Flake8 plugin that checks return values"
 name = "flake8-return"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "1.1.1"
+version = "1.1.2"
 
 [package.dependencies]
 flake8-plugin-utils = ">=1.0,<2.0"
@@ -1319,8 +1319,8 @@ flake8-requirements = [
     {file = "flake8_requirements-1.3.2-py2.py3-none-any.whl", hash = "sha256:375066874d658098365cc49cb35d13cedc0543bba33c0167601fd9170946ce10"},
 ]
 flake8-return = [
-    {file = "flake8-return-1.1.1.tar.gz", hash = "sha256:03b920cf2784370af4447a754fb7133ce165a6ecf6d4f506a95c4032ece48d8a"},
-    {file = "flake8_return-1.1.1-py3-none-any.whl", hash = "sha256:a219b619cdca3cd07dae150772f21083a11ce5280e2198acbac82bd9be0f574f"},
+    {file = "flake8-return-1.1.2.tar.gz", hash = "sha256:d646d3b010a9736ddc23c24f98ad3282999f575da45d6eb9cefe4adddb44062d"},
+    {file = "flake8_return-1.1.2-py3-none-any.whl", hash = "sha256:183d0ad2f8553cb2c63c0cf288eb799d967577a74639599525adcd3860f6bb12"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
