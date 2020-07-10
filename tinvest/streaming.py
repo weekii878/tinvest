@@ -5,6 +5,7 @@ from functools import wraps
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
+from pydantic.datetime_parse import parse_datetime  # pylint: disable=E0611
 
 from .constants import STREAMING
 from .schemas import (
@@ -17,7 +18,7 @@ from .schemas import (
     ServiceEventName,
 )
 from .typedefs import AnyDict
-from .utils import Func, parse_datetime
+from .utils import Func
 
 __all__ = (
     'Streaming',

@@ -1,4 +1,4 @@
-__version__ = '1.0.24'
+__version__ = '2.0.0'
 __api_version__ = '20.3'
 
 from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi, UserApi
@@ -10,16 +10,13 @@ from .schemas import (
     Candles,
     CandlesResponse,
     CandleStreaming,
-    CandleStreamingSchema,
     Currencies,
     Currency,
     CurrencyPosition,
     Empty,
     Error,
     ErrorStreaming,
-    ErrorStreamingSchema,
     InstrumentInfoStreaming,
-    InstrumentInfoStreamingSchema,
     InstrumentType,
     LimitOrderRequest,
     LimitOrderResponse,
@@ -41,7 +38,6 @@ from .schemas import (
     Orderbook,
     OrderbookResponse,
     OrderbookStreaming,
-    OrderbookStreamingSchema,
     OrderResponse,
     OrdersResponse,
     OrderStatus,
@@ -77,10 +73,6 @@ __all__ = (
     'StreamingApi',
     'StreamingEvents',
     # Streaming Schemas
-    'InstrumentInfoStreamingSchema',
-    'OrderbookStreamingSchema',
-    'ErrorStreamingSchema',
-    'CandleStreamingSchema',
     'InstrumentInfoStreaming',
     'OrderbookStreaming',
     'ErrorStreaming',

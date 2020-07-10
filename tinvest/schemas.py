@@ -1,4 +1,5 @@
 # pylint: disable=too-many-lines
+from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple, TypeVar
 
@@ -57,10 +58,6 @@ __all__ = (
     'UserAccount',
     'UserAccounts',
     'UserAccountsResponse',
-    'InstrumentInfoStreamingSchema',
-    'OrderbookStreamingSchema',
-    'ErrorStreamingSchema',
-    'CandleStreamingSchema',
     'InstrumentInfoStreaming',
     'OrderbookStreaming',
     'ErrorStreaming',
@@ -237,7 +234,7 @@ class Candle(BaseModel):
     interval: CandleResolution
     l: float
     o: float
-    time: str
+    time: datetime
     v: int
 
 
@@ -263,7 +260,7 @@ class MarketInstrumentList(BaseModel):
 
 
 class OperationTrade(BaseModel):
-    date: str
+    date: datetime
     price: float
     quantity: int
     trade_id: str
@@ -275,7 +272,7 @@ class OperationTrade(BaseModel):
 class Operation(BaseModel):
     commission: Optional[MoneyAmount]
     currency: Currency
-    date: str
+    date: datetime
     figi: Optional[str]
     id: str
     instrument_type: Optional[InstrumentType]
@@ -600,9 +597,6 @@ class InstrumentInfoStreaming(BaseModel):
     limit_down: Optional[float]
 
 
-InstrumentInfoStreamingSchema = InstrumentInfoStreaming  # DEPRECATED
-
-
 class OrderbookStreaming(BaseModel):
     figi: str
     depth: int
@@ -610,18 +604,12 @@ class OrderbookStreaming(BaseModel):
     asks: List[Tuple[float, float]]
 
 
-OrderbookStreamingSchema = OrderbookStreaming  # DEPRECATED
-
-
 class ErrorStreaming(BaseModel):
     error: str
     request_id: Optional[str]
 
 
-ErrorStreamingSchema = ErrorStreaming  # DEPRECATED
-
 CandleStreaming = Candle
-CandleStreamingSchema = Candle  # DEPRECATED
 
 
 class EventName(str, Enum):
