@@ -200,6 +200,17 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(request())
 ```
 
+### Sandbox
+
+Sandbox позволяет вам попробовать свои торговые стратегии, при этом не тратя реальные средства. Протокол взаимодействия полностью совпадает с Production окружением.
+
+```python
+async_client = tinvest.AsyncClient(SANDBOX_TOKEN, use_sandbox=True)
+# sync_client = tinvest.SyncClient(SANDBOX_TOKEN, use_sandbox=True)
+
+api = tinvest.SandboxApi(client)
+```
+
 ## Contributing
 
 Предлагайте свои пулл реквесты, проект с открытым исходным кодом.
