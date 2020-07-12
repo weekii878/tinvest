@@ -25,6 +25,7 @@ from .typedefs import datetime_or_str
 from .utils import isoformat
 
 __all__ = (
+    'OpenApi',
     'MarketApi',
     'OperationsApi',
     'OrdersApi',
@@ -41,6 +42,16 @@ class BaseApi:
     @property
     def client(self) -> Any:
         return self._client
+
+
+class OpenApi:
+    def __init__(self, client: Any) -> None:
+        self.sandbox = SandboxApi(client)
+        self.orders = OrdersApi(client)
+        self.portfolio = PortfolioApi(client)
+        self.market = MarketApi(client)
+        self.operations = OperationsApi(client)
+        self.user = UserApi(client)
 
 
 class SandboxApi(BaseApi):

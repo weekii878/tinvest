@@ -1,7 +1,15 @@
 __version__ = '2.0.0'
 __api_version__ = '20.3'
 
-from .apis import MarketApi, OperationsApi, OrdersApi, PortfolioApi, SandboxApi, UserApi
+from .apis import (
+    MarketApi,
+    OpenApi,
+    OperationsApi,
+    OrdersApi,
+    PortfolioApi,
+    SandboxApi,
+    UserApi,
+)
 from .async_client import AsyncClient
 from .schemas import (
     BrokerAccountType,
@@ -78,6 +86,7 @@ __all__ = (
     'ErrorStreaming',
     'CandleStreaming',
     # API Clients
+    'OpenApi',
     'MarketApi',
     'OperationsApi',
     'OrdersApi',
