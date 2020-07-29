@@ -39,9 +39,8 @@ class Func:
 
     async def __call__(self) -> None:
         if self.is_async:
-            await self.func(*self.args, **self.kwargs)
-        else:
-            await run_in_threadpool(self.func, *self.args, **self.kwargs)
+            return await self.func(*self.args, **self.kwargs)
+        return await run_in_threadpool(self.func, *self.args, **self.kwargs)
 
 
 async def run_in_threadpool(

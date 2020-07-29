@@ -41,3 +41,8 @@ async def test_client_response(client):
     async with client.request('get', '/some_url', response_model=Empty) as response:
         assert 'parse_json' in dir(response)
         assert 'parse_error' in dir(response)
+
+
+@pytest.mark.asyncio
+async def test_client_session_close(client):
+    await client.close()

@@ -1,19 +1,20 @@
 .DEFAULT_GOAL := help
 CODE = tinvest tests
 
-.PHONY: all venv test lint format docs update help
+.PHONY: all venv test lint format build docs update help clean
 
-all: format lint test docs
+all: format lint test build docs clean
 
 help:
-	@echo ''
-	@echo 'Tinvest Makefile:'
+	@echo 'Usage: make [target] ...'
 	@echo ''
 	@echo '    make all'
 	@echo '    make format'
 	@echo '    make lint'
 	@echo '    make test'
+	@echo '    make build'
 	@echo '    make docs'
+	@echo '    make clean'
 	@echo ''
 
 venv:
@@ -31,7 +32,6 @@ lint:
 	black --skip-string-normalization --line-length=88 --check $(CODE)
 	pytest --dead-fixtures --dup-fixtures
 	mypy $(CODE)
-	mkdocs build -s
 
 format:
 	autoflake --recursive --in-place --remove-all-unused-imports $(CODE)
@@ -42,6 +42,9 @@ format:
 docs:
 	mkdocs build -s -v
 
+build:
+	poetry build
 
 clean:
-	rm -r site
+	rm -rf site || true
+	rm -rf dist || true

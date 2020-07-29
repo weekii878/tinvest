@@ -17,7 +17,7 @@ after_success:
   - codecov
 
 before_deploy:
-  - poetry build
+  - make build docs
 
 deploy:
   - provider: script

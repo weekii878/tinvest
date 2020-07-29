@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from tinvest.utils import isoformat, set_default_headers
+from tinvest.utils import Func, isoformat, set_default_headers
 
 
 def test_set_default_headers(token):
@@ -36,3 +36,21 @@ def test_set_default_headers_with_headers(token):
 )
 def test_isoformat(dt, expected):
     assert isoformat(dt) == expected
+
+
+@pytest.mark.asyncio
+async def test_sync_func():
+    def some_sync_func():
+        return True
+
+    func = Func(some_sync_func)
+    assert await func()
+
+
+@pytest.mark.asyncio
+async def test_async_func():
+    async def some_async_func():
+        return True
+
+    func = Func(some_async_func)
+    assert await func()
