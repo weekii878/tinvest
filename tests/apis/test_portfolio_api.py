@@ -1,3 +1,4 @@
+# pylint:disable=redefined-outer-name
 import pytest
 
 from tinvest import PortfolioApi, PortfolioCurrenciesResponse, PortfolioResponse

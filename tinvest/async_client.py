@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
-from typing import Any, AsyncIterator, Type
+from typing import Any, AsyncIterator, Generic, Type, TypeVar
 
 from aiohttp import ClientResponse, ClientSession
+from pydantic import BaseModel  # pylint:disable=no-name-in-module
 
 from .base_client import BaseClient
-from .schemas import Error, T
+from .schemas import Error
 from .utils import set_default_headers
 
 __all__ = (
@@ -12,8 +13,12 @@ __all__ = (
     'ResponseWrapper',
 )
 
+T = TypeVar('T', bound=BaseModel)
 
-class ResponseWrapper:
+
+class ResponseWrapper(Generic[T]):
+    S = TypeVar('S', bound=BaseModel)
+
     def __init__(self, response: ClientResponse, response_model: Type[T]):
         self._response = response
         self._response_model = response_model
@@ -27,7 +32,7 @@ class ResponseWrapper:
     async def parse_error(self, **kwargs: Any) -> Error:
         return await self._parse_json(Error, **kwargs)
 
-    async def _parse_json(self, response_model: Type[T], **kwargs: Any) -> T:
+    async def _parse_json(self, response_model: Type[S], **kwargs: Any) -> S:
         return response_model.parse_obj(await self._response.json(**kwargs))
 
 
@@ -45,7 +50,7 @@ class AsyncClient(BaseClient[ClientSession]):
         set_default_headers(kwargs, self._token)
 
         async with self.session.request(method, url, **kwargs) as response:
-            yield ResponseWrapper(response, response_model)
+            yield ResponseWrapper[T](response, response_model)
 
     async def close(self) -> None:
         await self.session.close()

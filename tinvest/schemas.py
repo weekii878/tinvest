@@ -1,9 +1,9 @@
-# pylint: disable=too-many-lines
+# pylint:disable=too-many-lines
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, TypeVar
+from typing import Any, Dict, List, Optional, Tuple
 
-from pydantic import BaseModel  # pylint: disable=E0611
+from pydantic import BaseModel  # pylint:disable=no-name-in-module
 
 __all__ = (
     'BrokerAccountType',
@@ -64,11 +64,7 @@ __all__ = (
     'CandleStreaming',
     'EventName',
     'ServiceEventName',
-    'T',
 )
-
-
-T = TypeVar('T', bound=BaseModel)
 
 
 class BrokerAccountType(str, Enum):

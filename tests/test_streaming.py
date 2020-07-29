@@ -1,4 +1,7 @@
-# pylint: disable=unused-variable
+# pylint:disable=redefined-outer-name
+# pylint:disable=unused-argument
+# pylint:disable=unused-variable
+# pylint:disable=protected-access
 import asynctest
 import pytest
 
@@ -157,4 +160,4 @@ async def test_streaming_server_time_in_handler():
 
     Streaming('TOKEN').add_handlers([('some_event', func)])
 
-    assert func.receive_server_time__
+    assert func.receive_server_time__  # pylint:disable=no-member

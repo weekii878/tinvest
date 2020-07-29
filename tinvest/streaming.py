@@ -5,7 +5,7 @@ from functools import wraps
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
-from pydantic.datetime_parse import parse_datetime  # pylint: disable=E0611
+from pydantic.datetime_parse import parse_datetime  # pylint:disable=E0611
 
 from .constants import STREAMING
 from .schemas import (
@@ -52,7 +52,7 @@ class Streaming:
         EventName.error: ErrorStreaming,
     }
 
-    def __init__(  # pylint: disable=R0913
+    def __init__(  # pylint:disable=R0913
         self,
         token: str,
         session=None,
@@ -122,7 +122,7 @@ class Streaming:
                 receive_timeout=self._receive_timeout,
             ) as ws:
                 await self._run(ws)
-        except asyncio.CancelledError:  # pylint: disable=try-except-raise
+        except asyncio.CancelledError:  # pylint:disable=try-except-raise
             raise
         except asyncio.TimeoutError:
             logger.error('Timeout error. Try to reconnect')

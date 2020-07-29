@@ -1,9 +1,9 @@
 import asyncio
 import functools
 import typing
-from datetime import datetime, timezone
+from datetime import timezone
 
-from .typedefs import AnyDict
+from .typedefs import AnyDict, datetime_or_str
 
 try:
     import contextvars  # Python 3.7+ only.
@@ -60,7 +60,7 @@ async def run_in_threadpool(
     return await loop.run_in_executor(None, func, *args)
 
 
-def isoformat(dt: typing.Union[str, datetime]) -> str:
+def isoformat(dt: datetime_or_str) -> str:
     if isinstance(dt, str):
         return dt
     return dt.replace(tzinfo=timezone.utc).isoformat()

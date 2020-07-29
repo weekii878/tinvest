@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Generic, Optional, TypeVar
 
 from .schemas import (
     CandleResolution,
@@ -34,18 +34,20 @@ __all__ = (
     'UserApi',
 )
 
+T = TypeVar('T')
 
-class BaseApi:
-    def __init__(self, client: Any) -> None:
+
+class BaseApi(Generic[T]):
+    def __init__(self, client: T) -> None:
         self._client = client
 
     @property
-    def client(self) -> Any:
+    def client(self) -> T:
         return self._client
 
 
-class OpenApi:
-    def __init__(self, client: Any) -> None:
+class OpenApi(Generic[T]):
+    def __init__(self, client: T) -> None:
         self.sandbox = SandboxApi(client)
         self.orders = OrdersApi(client)
         self.portfolio = PortfolioApi(client)
