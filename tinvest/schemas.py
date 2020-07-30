@@ -213,9 +213,13 @@ class MarketInstrument(BaseModel):
     name: str
     ticker: str
     type: InstrumentType
+    min_quantity: Optional[int]
 
     class Config:
-        fields = {'min_price_increment': {'alias': 'minPriceIncrement'}}
+        fields = {
+            'min_price_increment': {'alias': 'minPriceIncrement'},
+            'min_quantity': {'alias': 'minQuantity'},
+        }
 
 
 class OrderResponse(BaseModel):
@@ -277,6 +281,7 @@ class Operation(BaseModel):
     payment: float
     price: Optional[float]
     quantity: Optional[int]
+    quantity_executed: Optional[int]
     status: OperationStatus
     trades: Optional[List[OperationTrade]]
 
@@ -285,6 +290,7 @@ class Operation(BaseModel):
             'instrument_type': {'alias': 'instrumentType'},
             'is_margin_call': {'alias': 'isMarginCall'},
             'operation_type': {'alias': 'operationType'},
+            'quantity_executed': {'alias': 'quantityExecuted'},
         }
 
 
