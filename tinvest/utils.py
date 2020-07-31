@@ -70,7 +70,7 @@ def infinity(func: typing.Callable[..., typing.Awaitable[None]]):
     @functools.wraps(func)
     async def wrapper(
         *args: typing.Any, **kwargs: typing.Any
-    ) -> typing.Awaitable[typing.NoReturn]:
+    ) -> typing.Awaitable[None]:
         while True:
             await func(*args, **kwargs)
 
