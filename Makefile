@@ -33,7 +33,8 @@ lint:
 	black --skip-string-normalization --line-length=88 --check $(CODE)
 	pytest --dead-fixtures --dup-fixtures
 	mypy $(CODE)
-	safety check --full-report
+	# ignore pipenv
+	safety check --full-report --ignore=38334
 
 format:
 	autoflake --recursive --in-place --remove-all-unused-imports $(CODE)
