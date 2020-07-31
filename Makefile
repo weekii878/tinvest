@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 CODE = tinvest tests
 
-.PHONY: all venv test lint format build docs update help clean
+.PHONY: all venv test lint format build docs update help clean mut
 
 all: format lint test build docs clean
 
@@ -12,6 +12,7 @@ help:
 	@echo '    make format'
 	@echo '    make lint'
 	@echo '    make test'
+	@echo '    make mut'
 	@echo '    make build'
 	@echo '    make docs'
 	@echo '    make clean'
@@ -32,6 +33,7 @@ lint:
 	black --skip-string-normalization --line-length=88 --check $(CODE)
 	pytest --dead-fixtures --dup-fixtures
 	mypy $(CODE)
+	safety check --full-report
 
 format:
 	autoflake --recursive --in-place --remove-all-unused-imports $(CODE)
@@ -48,3 +50,6 @@ build:
 clean:
 	rm -rf site || true
 	rm -rf dist || true
+
+mut:
+	mutmut run

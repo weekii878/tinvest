@@ -8,13 +8,14 @@ from .typedefs import AnyDict, datetime_or_str
 try:
     import contextvars  # Python 3.7+ only.
 except ImportError:  # pragma: no cover
-    contextvars = None  # type: ignore
+    contextvars = None  # type: ignore # pragma: no mutate
 
 __all__ = (
     'set_default_headers',
     'Func',
     'run_in_threadpool',
     'isoformat',
+    'infinity',
 )
 
 
@@ -25,7 +26,7 @@ def set_default_headers(data: AnyDict, token: str) -> None:
     data['headers'] = headers
 
 
-T = typing.TypeVar('T')
+T = typing.TypeVar('T')  # pragma: no mutate
 
 
 class Func:
@@ -47,7 +48,7 @@ async def run_in_threadpool(
     func: typing.Callable[..., T], *args: typing.Any, **kwargs: typing.Any
 ) -> T:
     loop = asyncio.get_event_loop()
-    if contextvars is not None:  # pragma: no cover
+    if contextvars is not None:  # pragma: no cover, no mutate
         # Ensure we run in the same context
         child = functools.partial(func, *args, **kwargs)
         context = contextvars.copy_context()
@@ -55,7 +56,7 @@ async def run_in_threadpool(
         args = (child,)
     elif kwargs:  # pragma: no cover
         # loop.run_in_executor doesn't accept 'kwargs', so bind them in here
-        func = functools.partial(func, **kwargs)
+        func = functools.partial(func, **kwargs)  # pragma: no mutate
     return await loop.run_in_executor(None, func, *args)
 
 
@@ -63,3 +64,14 @@ def isoformat(dt: datetime_or_str) -> str:
     if isinstance(dt, str):
         return dt
     return dt.replace(tzinfo=timezone.utc).isoformat()
+
+
+def infinity(func: typing.Callable[..., typing.Awaitable[None]]):
+    @functools.wraps(func)
+    async def wrapper(
+        *args: typing.Any, **kwargs: typing.Any
+    ) -> typing.Awaitable[typing.NoReturn]:
+        while True:
+            await func(*args, **kwargs)
+
+    return wrapper

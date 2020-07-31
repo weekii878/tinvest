@@ -1,7 +1,6 @@
 import asyncio
 import logging
 from datetime import datetime
-from functools import wraps
 from typing import Any, Callable, Coroutine, Dict, List, Optional, Tuple, Union
 
 import aiohttp
@@ -18,7 +17,7 @@ from .schemas import (
     ServiceEventName,
 )
 from .typedefs import AnyDict
-from .utils import Func
+from .utils import Func, infinity
 
 __all__ = (
     'Streaming',
@@ -32,16 +31,7 @@ __all__ = (
 logger = logging.getLogger(__name__)
 
 
-_Handler = Tuple[str, Callable]
-
-
-def _retry(func):
-    @wraps(func)
-    async def wrapper(self):
-        while True:
-            await func(self)
-
-    return wrapper
+_Handler = Tuple[str, Callable]  # pragma: no mutate
 
 
 class Streaming:
@@ -52,10 +42,11 @@ class Streaming:
         EventName.error: ErrorStreaming,
     }
 
-    def __init__(  # pylint:disable=R0913
+    def __init__(
         self,
         token: str,
-        session=None,
+        *,
+        session: Optional[aiohttp.ClientSession] = None,
         state: Optional[AnyDict] = None,
         reconnect_timeout: float = 3,
         ws_close_timeout: float = 0,
@@ -111,7 +102,7 @@ class Streaming:
             )
         return self
 
-    @_retry
+    @infinity
     async def run(self) -> None:
         try:
             async with self._session.ws_connect(

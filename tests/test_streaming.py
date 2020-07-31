@@ -2,6 +2,7 @@
 # pylint:disable=unused-argument
 # pylint:disable=unused-variable
 # pylint:disable=protected-access
+import aiohttp
 import asynctest
 import pytest
 
@@ -10,9 +11,12 @@ from tinvest import CandleResolution, Streaming, StreamingApi, StreamingEvents
 
 @pytest.fixture()
 def ws():
-    _ws = asynctest.Mock(autospec=True)
-    _ws.send_json = asynctest.CoroutineMock(autospec=True)
-    return _ws
+    return asynctest.Mock(aiohttp.ClientWebSocketResponse, autospec=True)
+
+
+@pytest.fixture()
+def session():
+    return asynctest.Mock(aiohttp.ClientSession, autospec=True)
 
 
 @pytest.fixture()
@@ -70,10 +74,8 @@ def _handlers(streaming_events):
 
 
 @pytest.fixture()
-async def streaming(token, streaming_events):
-    s = Streaming(token).add_handlers(streaming_events)
-    yield s
-    await s._session.close()
+async def streaming(token, streaming_events, session):
+    return Streaming(token, session=session).add_handlers(streaming_events)
 
 
 @pytest.mark.usefixtures('_handlers')
@@ -109,7 +111,9 @@ def test_streaming_api_state_error(streaming_api):
 @pytest.mark.parametrize('action', ['subscribe', 'unsubscribe'])
 async def test_streaming_candle(streaming_api, ws, figi, action):
     await getattr(streaming_api.candle, action)(figi, CandleResolution.min1)
-    ws.send_json.assert_called_once()
+    ws.send_json.assert_called_once_with(
+        {'event': f'candle:{action}', 'figi': figi, 'interval': CandleResolution.min1}
+    )
 
 
 @pytest.mark.asyncio
@@ -136,7 +140,7 @@ async def test_streaming_instrument_info(streaming_api, ws, figi, action):
 
 @pytest.mark.asyncio
 async def test_streaming_without_token():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='^Token can not be empty$'):
         Streaming('')
 
 
@@ -161,3 +165,12 @@ async def test_streaming_server_time_in_handler():
     Streaming('TOKEN').add_handlers([('some_event', func)])
 
     assert func.receive_server_time__  # pylint:disable=no-member
+
+
+def test_streaming_events(streaming_events):
+    @streaming_events.candle()
+    def some_func():
+        return True
+
+    assert some_func.__name__ == 'some_func'
+    assert some_func()

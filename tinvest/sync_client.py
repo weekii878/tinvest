@@ -9,7 +9,7 @@ from .utils import set_default_headers
 
 __all__ = ('SyncClient', 'ResponseWrapper')
 
-T = TypeVar('T', bound=BaseModel)
+T = TypeVar('T', bound=BaseModel)  # pragma: no mutate
 
 
 class ResponseWrapper(Generic[T]):

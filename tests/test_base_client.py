@@ -6,13 +6,15 @@ from tinvest.constants import PRODUCTION, SANDBOX
 
 
 def test_create_client(token):
-    client = BaseClient(token)
+    session = object()
+    client = BaseClient(token, session=session)
 
     assert client._base_url == PRODUCTION  # pylint:disable=protected-access
+    assert client.session is session
 
 
 def test_create_client_with_empty_token():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='^Token can not be empty$'):
         BaseClient('')
 
 

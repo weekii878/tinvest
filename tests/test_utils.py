@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import asynctest
 import pytest
 
 from tinvest.utils import Func, isoformat, set_default_headers
@@ -39,18 +40,18 @@ def test_isoformat(dt, expected):
 
 
 @pytest.mark.asyncio
-async def test_sync_func():
-    def some_sync_func():
-        return True
+async def test_sync_func(mocker):
+    some_sync_func = mocker.Mock(return_value=1)
 
-    func = Func(some_sync_func)
-    assert await func()
+    assert await Func(some_sync_func, 1, key='')() == 1
+
+    some_sync_func.assert_called_once_with(1, key='')
 
 
 @pytest.mark.asyncio
 async def test_async_func():
-    async def some_async_func():
-        return True
+    some_async_func = asynctest.mock.CoroutineMock(return_value=1)
 
-    func = Func(some_async_func)
-    assert await func()
+    assert await Func(some_async_func, 1, key='')() == 1
+
+    some_async_func.assert_called_once_with(1, key='')

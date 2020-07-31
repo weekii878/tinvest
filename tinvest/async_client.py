@@ -13,7 +13,7 @@ __all__ = (
     'ResponseWrapper',
 )
 
-T = TypeVar('T', bound=BaseModel)
+T = TypeVar('T', bound=BaseModel)  # pragma: no mutate
 
 
 class ResponseWrapper(Generic[T]):

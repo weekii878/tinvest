@@ -4,7 +4,7 @@ from .constants import PRODUCTION, SANDBOX
 
 __all__ = ('BaseClient',)
 
-T = TypeVar('T')
+T = TypeVar('T')  # pragma: no mutate
 
 
 class BaseClient(Generic[T]):

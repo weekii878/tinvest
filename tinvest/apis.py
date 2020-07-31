@@ -34,7 +34,7 @@ __all__ = (
     'UserApi',
 )
 
-T = TypeVar('T')
+T = TypeVar('T')  # pragma: no mutate
 
 
 class BaseApi(Generic[T]):
@@ -82,7 +82,7 @@ class SandboxApi(BaseApi):
         params = kwargs['params']
         if broker_account_id:
             params.setdefault('brokerAccountId', broker_account_id)
-        kwargs.setdefault('data', body.json(by_alias=True))
+        kwargs.setdefault('data', body.json())
         return self.client.request(
             'POST', '/sandbox/currencies/balance', response_model=Empty, **kwargs,
         )
@@ -100,7 +100,7 @@ class SandboxApi(BaseApi):
         params = kwargs['params']
         if broker_account_id:
             params.setdefault('brokerAccountId', broker_account_id)
-        kwargs.setdefault('data', body.json(by_alias=True))
+        kwargs.setdefault('data', body.json())
         return self.client.request(
             'POST', '/sandbox/positions/balance', response_model=Empty, **kwargs
         )
@@ -154,7 +154,7 @@ class OrdersApi(BaseApi):
         params.setdefault('figi', figi)
         if broker_account_id:
             params.setdefault('brokerAccountId', broker_account_id)
-        kwargs.setdefault('data', body.json(by_alias=True))
+        kwargs.setdefault('data', body.json())
         return self.client.request(
             'POST', '/orders/limit-order', response_model=LimitOrderResponse, **kwargs,
         )
@@ -172,7 +172,7 @@ class OrdersApi(BaseApi):
         params.setdefault('figi', figi)
         if broker_account_id:
             params.setdefault('brokerAccountId', broker_account_id)
-        kwargs.setdefault('data', body.json(by_alias=True))
+        kwargs.setdefault('data', body.json())
         return self.client.request(
             'POST', '/orders/market-order', response_model=MarketOrderResponse, **kwargs
         )
