@@ -1,9 +1,10 @@
 .DEFAULT_GOAL := help
 CODE = tinvest tests
+TEST = pytest $(args) --verbosity=2 --showlocals --strict --log-level=DEBUG
 
 .PHONY: all venv test lint format build docs update help clean mut
 
-all: format lint test build docs clean
+all: format lint test test-report build docs clean
 
 help:
 	@echo 'Usage: make [target] ...'
@@ -12,6 +13,7 @@ help:
 	@echo '    make format'
 	@echo '    make lint'
 	@echo '    make test'
+	@echo '    make test-report'
 	@echo '    make mut'
 	@echo '    make build'
 	@echo '    make docs'
@@ -25,7 +27,11 @@ update:
 	poetry update
 
 test:
-	pytest --verbosity=2 --showlocals --strict --log-level=DEBUG --cov=$(CODE) $(args)
+	$(TEST) --cov
+
+test-report:
+	$(TEST) --cov --cov-report html
+	python -m webbrowser 'htmlcov/index.html'
 
 lint:
 	flake8 --jobs 1 --statistics --show-source $(CODE)
@@ -51,6 +57,7 @@ build:
 clean:
 	rm -rf site || true
 	rm -rf dist || true
+	rm -rf htmlcov || true
 
 mut:
 	mutmut run
