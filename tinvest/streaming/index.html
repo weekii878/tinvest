@@ -1,0 +1,963 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Данный проект представляет собой инструментарий на языке Python для работы с OpenAPI Тинькофф Инвестиции, который можно использовать для создания торговых роботов." name="description"/>
+<link href="https://daxartio.github.io/tinvest/tinvest/streaming/" rel="canonical"/>
+<link href="../../assets/images/favicon.png" rel="shortcut icon"/>
+<meta content="mkdocs-1.1.2, mkdocs-material-5.5.3" name="generator"/>
+<title>streaming.py - Tinvest</title>
+<link href="../../assets/stylesheets/main.947af8d5.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.7f672a1f.min.css" rel="stylesheet"/>
+<meta content="" name="theme-color"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
+<style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+<link href="../../custom.css" rel="stylesheet"/>
+</head>
+<body data-md-color-accent="yellow" data-md-color-primary="black" data-md-color-scheme="" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#tinveststreamingpy">
+          Перейти к содержанию
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header-nav md-grid">
+<a aria-label="Tinvest" class="md-header-nav__button md-logo" href="https://daxartio.github.io/tinvest/" title="Tinvest">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
+</a>
+<label class="md-header-nav__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"></path></svg>
+</label>
+<div class="md-header-nav__title" data-md-component="header-title">
+<div class="md-header-nav__ellipsis">
+<span class="md-header-nav__topic md-ellipsis">
+            Tinvest
+          </span>
+<span class="md-header-nav__topic md-ellipsis">
+            
+              streaming.py
+            
+          </span>
+</div>
+</div>
+<label class="md-header-nav__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Поиск" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" data-md-state="active" name="query" placeholder="Поиск" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</label>
+<button aria-label="Clear" class="md-search__icon md-icon" data-md-component="search-reset" tabindex="-1" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header-nav__source">
+<a class="md-source" href="https://github.com/daxartio/tinvest/" title="Перейти к репозиторию">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    tinvest
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Tinvest" class="md-nav__button md-logo" href="https://daxartio.github.io/tinvest/" title="Tinvest">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"></path></svg>
+</a>
+    Tinvest
+  </label>
+<div class="md-nav__source">
+<a class="md-source" href="https://github.com/daxartio/tinvest/" title="Перейти к репозиторию">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    tinvest
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../.." title="Главная">
+      Главная
+    </a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" data-md-toggle="nav-2" id="nav-2" type="checkbox"/>
+<label class="md-nav__link" for="nav-2">
+      tinvest
+      <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"></path></svg>
+</span>
+</label>
+<nav aria-label="tinvest" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="nav-2">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+        tinvest
+      </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../apis/" title="apis.py">
+      apis.py
+    </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+        streaming.py
+        <span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"></path></svg>
+</span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./" title="streaming.py">
+      streaming.py
+    </a>
+<nav aria-label="Содержание" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+      Содержание
+    </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming">
+    tinvest.streaming
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.Streaming">
+    Streaming
+  </a>
+<nav aria-label="Streaming" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.Streaming.__init__">
+    __init__()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents">
+    StreamingEvents
+  </a>
+<nav aria-label="StreamingEvents" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.candle">
+    candle()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.cleanup">
+    cleanup()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.error">
+    error()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.instrument_info">
+    instrument_info()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.orderbook">
+    orderbook()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.reconnect">
+    reconnect()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.startup">
+    startup()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Содержание" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</span>
+      Содержание
+    </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming">
+    tinvest.streaming
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.Streaming">
+    Streaming
+  </a>
+<nav aria-label="Streaming" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.Streaming.__init__">
+    __init__()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents">
+    StreamingEvents
+  </a>
+<nav aria-label="StreamingEvents" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.candle">
+    candle()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.cleanup">
+    cleanup()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.error">
+    error()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.instrument_info">
+    instrument_info()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.orderbook">
+    orderbook()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.reconnect">
+    reconnect()
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tinvest.streaming.StreamingEvents.startup">
+    startup()
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<a class="md-content__button md-icon" href="https://github.com/daxartio/tinvest/edit/master/docs/tinvest/streaming.md" title="Редактировать страницу">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"></path></svg>
+</a>
+<h1 id="tinveststreamingpy">tinvest/streaming.py</h1>
+<div class="doc doc-object doc-module">
+<h2 class="hidden-toc" href="#tinvest.streaming" id="tinvest.streaming" style="visibility: hidden; width: 0; height: 0;">
+</h2>
+<div class="doc doc-contents first">
+<div class="doc doc-children">
+<div class="doc doc-object doc-class">
+<h2 class="doc doc-heading" id="tinvest.streaming.Streaming">
+<code>Streaming</code>
+</h2>
+<div class="doc doc-contents">
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.Streaming.__init__">
+<code class="highlight language-python">
+__init__<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reconnect_timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ws_close_timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">receive_timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">heartbeat</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> </code>
+<span class="doc doc-properties">
+<small class="doc doc-property doc-property-special"><code>special</code></small>
+</span>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">tinvest</span>
+
+<span class="n">events</span> <span class="o">=</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingEvents</span><span class="p">()</span>
+
+<span class="o">...</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="p">(</span>
+        <span class="n">tinvest</span><span class="o">.</span><span class="n">Streaming</span><span class="p">(</span><span class="s2">"TOKEN"</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">{</span><span class="s2">"postgres"</span><span class="p">:</span> <span class="o">...</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">add_handlers</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AnyDict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">reconnect_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">ws_close_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">receive_timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">heartbeat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    import tinvest</span>
+
+<span class="sd">    events = tinvest.StreamingEvents()</span>
+
+<span class="sd">    ...</span>
+
+<span class="sd">    async def main():</span>
+<span class="sd">        await (</span>
+<span class="sd">            tinvest.Streaming("TOKEN", state={"postgres": ...})</span>
+<span class="sd">            .add_handlers(events)</span>
+<span class="sd">            .run()</span>
+<span class="sd">        )</span>
+
+<span class="sd">    if __name__ == "__main__":</span>
+<span class="sd">        try:</span>
+<span class="sd">            asyncio.run(main())</span>
+<span class="sd">        except KeyboardInterrupt:</span>
+<span class="sd">            pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Token can not be empty'</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">STREAMING</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">token</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span> <span class="o">=</span> <span class="n">session</span> <span class="ow">or</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_handlers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_Handler</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_reconnect_timeout</span> <span class="o">=</span> <span class="n">reconnect_timeout</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_ws_close_timeout</span> <span class="o">=</span> <span class="n">ws_close_timeout</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_receive_timeout</span> <span class="o">=</span> <span class="n">receive_timeout</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_heartbeat</span> <span class="o">=</span> <span class="n">heartbeat</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="doc doc-object doc-class">
+<h2 class="doc doc-heading" id="tinvest.streaming.StreamingEvents">
+<code>StreamingEvents</code>
+</h2>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">tinvest</span>
+
+<span class="n">events</span> <span class="o">=</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingEvents</span><span class="p">()</span>
+</code></pre>
+</div>
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.candle">
+<code class="highlight language-python">
+candle<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<p>
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">candle</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_candle</span><span class="p">(</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">,</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">CandleStreaming</span><span class="p">,</span>
+    <span class="n">server_time</span><span class="p">:</span> <span class="n">datetime</span>  <span class="c1"># [optional] if you want</span>
+<span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">candle</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_candle</span><span class="p">(</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">,</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">CandleStreaming</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+</p>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">candle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.candle()</span>
+<span class="sd">    async def handle_candle(</span>
+<span class="sd">        api: tinvest.StreamingApi,</span>
+<span class="sd">        payload: tinvest.CandleStreaming,</span>
+<span class="sd">        server_time: datetime  # [optional] if you want</span>
+<span class="sd">    ):</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.candle()</span>
+<span class="sd">    async def handle_candle(</span>
+<span class="sd">        api: tinvest.StreamingApi,</span>
+<span class="sd">        payload: tinvest.CandleStreaming,</span>
+<span class="sd">    ):</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">EventName</span><span class="o">.</span><span class="n">candle</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.cleanup">
+<code class="highlight language-python">
+cleanup<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">candle</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">,</span> <span class="s2">"1min"</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">orderbook</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">instrument_info</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">)</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.cleanup()</span>
+<span class="sd">    async def cleanup(api: tinvest.StreamingApi):</span>
+<span class="sd">        await api.candle.unsubscribe("BBG0013HGFT4", "1min")</span>
+<span class="sd">        await api.orderbook.unsubscribe("BBG0013HGFT4", 5)</span>
+<span class="sd">        await api.instrument_info.unsubscribe("BBG0013HGFT4")</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">ServiceEventName</span><span class="o">.</span><span class="n">cleanup</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.error">
+<code class="highlight language-python">
+error<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">error</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">ErrorStreaming</span>
+<span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.error()</span>
+<span class="sd">    async def handle_error(</span>
+<span class="sd">        api: tinvest.StreamingApi, payload: tinvest.ErrorStreaming</span>
+<span class="sd">    ):</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">EventName</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.instrument_info">
+<code class="highlight language-python">
+instrument_info<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">instrument_info</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_instrument_info</span><span class="p">(</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">InstrumentInfoStreaming</span>
+<span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">instrument_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.instrument_info()</span>
+<span class="sd">    async def handle_instrument_info(</span>
+<span class="sd">        api: tinvest.StreamingApi, payload: tinvest.InstrumentInfoStreaming</span>
+<span class="sd">    ):</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">EventName</span><span class="o">.</span><span class="n">instrument_info</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.orderbook">
+<code class="highlight language-python">
+orderbook<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">orderbook</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_orderbook</span><span class="p">(</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">OrderbookStreaming</span>
+<span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">orderbook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.orderbook()</span>
+<span class="sd">    async def handle_orderbook(</span>
+<span class="sd">        api: tinvest.StreamingApi, payload: tinvest.OrderbookStreaming</span>
+<span class="sd">    ):</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">EventName</span><span class="o">.</span><span class="n">orderbook</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.reconnect">
+<code class="highlight language-python">
+reconnect<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<p>
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">reconnect</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">handle_reconnect</span><span class="p">():</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">reconnect</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_reconnect</span><span class="p">():</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+</p>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">reconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.reconnect()</span>
+<span class="sd">    def handle_reconnect():</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.reconnect()</span>
+<span class="sd">    async def handle_reconnect():</span>
+<span class="sd">        pass</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">ServiceEventName</span><span class="o">.</span><span class="n">reconnect</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tinvest.streaming.StreamingEvents.startup">
+<code class="highlight language-python">
+startup<span class="p">(</span><span class="bp">self</span><span class="p">)</span> </code>
+</h3>
+<div class="doc doc-contents">
+<div class="highlight">
+<pre><span></span><code><span class="nd">@events</span><span class="o">.</span><span class="n">startup</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">(</span><span class="n">api</span><span class="p">:</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">StreamingApi</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">candle</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">,</span> <span class="n">tinvest</span><span class="o">.</span><span class="n">CandleResolution</span><span class="o">.</span><span class="n">min1</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">orderbook</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"123ASD1123"</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">instrument_info</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">"BBG0013HGFT4"</span><span class="p">)</span>
+</code></pre>
+</div>
+<details class="quote">
+<summary>Source code in <code>tinvest/streaming.py</code></summary>
+<table class="highlighttable">
+<tr>
+<td class="linenos">
+<div class="linenodiv">
+<pre><span></span>300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310</pre>
+</div>
+</td>
+<td class="code">
+<div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="nf">startup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    ```python</span>
+<span class="sd">    @events.startup()</span>
+<span class="sd">    async def startup(api: tinvest.StreamingApi):</span>
+<span class="sd">        await api.candle.subscribe("BBG0013HGFT4", tinvest.CandleResolution.min1)</span>
+<span class="sd">        await api.orderbook.subscribe("BBG0013HGFT4", 5, "123ASD1123")</span>
+<span class="sd">        await api.instrument_info.subscribe("BBG0013HGFT4")</span>
+<span class="sd">    ```</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorator_wrapper</span><span class="p">(</span><span class="n">ServiceEventName</span><span class="o">.</span><span class="n">startup</span><span class="p">)</span>
+</code></pre>
+</div>
+</td>
+</tr>
+</table>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav aria-label="Footer" class="md-footer-nav__inner md-grid">
+<a class="md-footer-nav__link md-footer-nav__link--prev" href="../apis/" rel="prev" title="apis.py">
+<div class="md-footer-nav__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"></path></svg>
+</div>
+<div class="md-footer-nav__title">
+<div class="md-ellipsis">
+<span class="md-footer-nav__direction">
+                  Назад
+                </span>
+                apis.py
+              </div>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+<div class="md-footer-copyright__highlight">
+            Copyright © 2020 Tinvest
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+          Material for MkDocs
+        </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<script src="../../assets/javascripts/vendor.c3dc8c49.min.js"></script>
+<script src="../../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439"}</script>
+<script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.8e2cddea.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+</body>
+</html>
